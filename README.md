@@ -4,5 +4,3 @@ Feuerwehr-App, zur Erleichterung bei der Einsatzführung im Bereich der freiwill
 - Cross-Platform
 - Flutter/ Dart/ PHP/ SQL
 - EInsatzdaten von https://intranet.ooelfv.at/webext2/rss/
-
-Test 
