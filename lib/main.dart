@@ -1,20 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'api.dart';
+import 'sharedloginregister.dart';
 
 void main() {
   runApp(MaterialApp(
-    home: info('Schweinbach'),
+    home: LoginPage(),
   ));
 }
-
-class firePad extends StatefulWidget {
+class SaferFire extends StatefulWidget{
   @override
-  _firePadState createState() => _firePadState();
+  _SaferFireState createState() => _SaferFireState();
 }
 
-class _firePadState extends State<firePad> {
+class _SaferFireState extends State<SaferFire> {
   @override
   Widget build(BuildContext context) {
     return Container();
