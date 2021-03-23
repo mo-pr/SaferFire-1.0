@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'api.dart';
 import 'stylesLoginRegister.dart';
 
 class LoginPage extends StatefulWidget {
@@ -57,14 +58,29 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  checkReg(){
+    final form = _keyT.currentState;
+    if (form.validate()) {
+      form.save();
+      save();
+    }
+  }
+
   login() async {
     final response =
-        await http.post("http://192.168.0.8/api_verification.php", body: {
+    await http.post("http://192.168.0.8/api_verification.php", body: {
       "flag": 1.toString(),
       "email": email,
       "password": password,
       "fcm_token": "test_fcm_token"
     });
+    /*final response =
+        await http.post("http://86.56.241.47/api_verification.php", body: {
+      "flag": 1.toString(),
+      "email": email,
+      "password": password,
+      "fcm_token": "test_fcm_token"
+    });*/
     final data = jsonDecode(response.body);
     int value = data['value'];
     String message = data['message'];
@@ -78,6 +94,7 @@ class _LoginPageState extends State<LoginPage> {
       });
       print(message);
       loginToast(message);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenu(signOut)));
     } else {
       print("fail");
       print(message);
@@ -106,6 +123,51 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  save() async {
+    final response =
+    await http.post("http://192.168.0.8/api_verification.php", body: {
+      "flag": 2.toString(),
+      "email": email,
+      "feuerwehr": feuerwehr,
+      "password": password,
+      "fcm_token": "test_fcm_token"
+    });
+    /*final response =
+    await http.post("http://86.56.241.47/api_verification.php", body: {
+      "flag": 2.toString(),
+      "email": email,
+      "feuerwehr": feuerwehr,
+      "password": password,
+      "fcm_token": "test_fcm_token"
+    });*/
+    final data = jsonDecode(response.body);
+    int value = data['value'];
+    String message = data['message'];
+    if (value == 1) {
+      setState(() {
+        info(feuerwehr);
+      });
+      print(message);
+      registerToast(message);
+    } else if (value == 2) {
+      print(message);
+      registerToast(message);
+    } else {
+      print(message);
+      registerToast(message);
+    }
+  }
+
+  registerToast(String toast) {
+    return Fluttertoast.showToast(
+        msg: toast,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.white10,
+        textColor: Colors.white);
+  }
+
   var value;
 
   getPref() async {
@@ -127,6 +189,7 @@ class _LoginPageState extends State<LoginPage> {
       preferences.commit();
       _loginStatus = LoginStatus.notSignIn;
     });
+    Navigator.pop(context);
   }
 
   @override
@@ -517,7 +580,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () {
-                        check();
+                        checkReg();
                         setState(() {
                           _pageState = 1;
                         });
@@ -546,3 +609,74 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+class MainMenu extends StatefulWidget {
+  final VoidCallback signOut;
+
+  MainMenu(this.signOut);
+
+  @override
+  _MainMenuState createState() => _MainMenuState();
+}
+
+class _MainMenuState extends State<MainMenu> {
+  signOut() {
+    setState(() {
+      widget.signOut();
+    });
+  }
+
+  int currentIndex = 0;
+  String selectedIndex = 'TAB: 0';
+  String email = "", name = "", id = "", ff = "";
+  TabController tabController;
+
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      id = preferences.getString("id");
+      email = preferences.getString("email");
+      name = preferences.getString("name");
+      ff = preferences.getString('ff');
+    });
+    print("ID: " + id);
+    print("USER: " + email);
+    print("NAME: " + name);
+    print("Feuerwehr: " + ff);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getPref();
+    infoState().getAPI();
+  }
+
+  String _title = "Info";
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.white10,
+        appBar: AppBar(
+          actions: [
+            IconButton(icon: Icon(Icons.logout), onPressed: signOut),
+          ],
+          centerTitle: true,
+          title: Text(
+            _title,
+            style: TextStyle(fontSize: 30),
+          ),
+          backgroundColor: Color(0xfffea701),
+        ),
+        body: Center(
+              child: Container(
+                padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                child: info(ff),
+              ),
+        ),
+      ),
+    );
+  }
+}
+
