@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,7 +14,7 @@ class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
-
+Timer timer;
 enum LoginStatus { notSignIn, signIn }
 
 class _LoginPageState extends State<LoginPage> {
@@ -205,6 +206,7 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    timer = Timer.periodic(Duration(seconds: 10), (Timer t)=> infoState().getAPI());
     getPref();
   }
 
