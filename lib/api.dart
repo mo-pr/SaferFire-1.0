@@ -128,54 +128,54 @@ class infoState extends State<info> {
   Widget build(BuildContext context) {
     getAPI();
     return num == null
-        ? Container(
-            padding: EdgeInsets.only(top: (MediaQuery.of(context).size.height/3)),
-            alignment: FractionalOffset.center,
-            child: Text(
-              "Zur Zeit liegt kein Alarm vor",
-              style: TextStyle(color: Colors.white, fontSize: 26),
-              textAlign: TextAlign.center,
-            ),
-          )
-        : Container(
-            width: double.infinity,
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Einsatztyp:${subtype != null ? subtype : ""}\n",
-                  style: TextStyle(color: Colors.white70, fontSize: 19),
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  "Einsatzart:${type != null ? type : ""}\n",
-                  style: TextStyle(color: Colors.white70, fontSize: 19),
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  "Einsatzort: ${location != null ? location : ""}\n",
-                  style: TextStyle(color: Colors.white70, fontSize: 18),
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  "Alarmstufe: ${stage != null ? stage : ""}\n",
-                  style: TextStyle(color: Colors.white70, fontSize: 18),
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  "Alarmzeit:${time != null ? time : ""}\n",
-                  style: TextStyle(color: Colors.white70, fontSize: 17),
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  "Feuerwehren: ${feuerwehren != null ? feuerwehren : ""}\n",
-                  style: TextStyle(color: Colors.white70, fontSize: 19),
-                  textAlign: TextAlign.left,
-                ),
-              ],
-            ),
-          );
+            ? Container(
+          padding: EdgeInsets.only(top: (MediaQuery.of(context).size.height/3)),
+          alignment: FractionalOffset.center,
+          child: Text(
+            "Zur Zeit liegt kein Alarm vor",
+            style: TextStyle(color: Colors.white, fontSize: 26),
+            textAlign: TextAlign.center,
+          ),
+        )
+            : Container(
+          width: double.infinity,
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Einsatztyp:${subtype != null ? subtype : ""}\n",
+                style: TextStyle(color: Colors.white70, fontSize: 19),
+                textAlign: TextAlign.left,
+              ),
+              Text(
+                "Einsatzart:${type != null ? type : ""}\n",
+                style: TextStyle(color: Colors.white70, fontSize: 19),
+                textAlign: TextAlign.left,
+              ),
+              Text(
+                "Einsatzort: ${location != null ? location : ""}\n",
+                style: TextStyle(color: Colors.white70, fontSize: 18),
+                textAlign: TextAlign.left,
+              ),
+              Text(
+                "Alarmstufe: ${stage != null ? stage : ""}\n",
+                style: TextStyle(color: Colors.white70, fontSize: 18),
+                textAlign: TextAlign.left,
+              ),
+              Text(
+                "Alarmzeit:${time != null ? time : ""}\n",
+                style: TextStyle(color: Colors.white70, fontSize: 17),
+                textAlign: TextAlign.left,
+              ),
+              Text(
+                "Feuerwehren: ${feuerwehren != null ? feuerwehren : ""}\n",
+                style: TextStyle(color: Colors.white70, fontSize: 19),
+                textAlign: TextAlign.left,
+              ),
+            ],
+          ),
+        );
   }
 }
