@@ -1,14 +1,10 @@
-import 'dart:collection';
 import 'dart:convert';
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'api.dart';
 import 'stylesLoginRegister.dart';
@@ -17,11 +13,9 @@ class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
-Timer timer;
-String ff = "";
-Set<Marker> markers = new HashSet<Marker>();
+
 enum LoginStatus { notSignIn, signIn }
-enum Title { Info, Karte, Foto, Protokoll, Atemschutz, Abschluss }
+
 class _LoginPageState extends State<LoginPage> {
   int _pageState = 1;
 
@@ -211,7 +205,6 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    timer = Timer.periodic(Duration(seconds: 10), (Timer t)=> infoState().getAPI());
     getPref();
   }
 
@@ -634,7 +627,7 @@ class _MainMenuState extends State<MainMenu> {
 
   int currentIndex = 0;
   String selectedIndex = 'TAB: 0';
-  String email = "", name = "", id = "";
+  String email = "", name = "", id = "", ff = "";
   TabController tabController;
 
   getPref() async {
@@ -657,146 +650,33 @@ class _MainMenuState extends State<MainMenu> {
     getPref();
     infoState().getAPI();
   }
+
   String _title = "Info";
-  int pageIndex = 0;
-  int initialIndex = 0;
-  final info _infoPage = info(ff);
-
-  Widget _showPage = new info(ff);
-
-  Widget _pageChooser(int page){
-    switch(page){
-      case 0:
-        return _infoPage;
-        break;
-      case 1:
-        return Container(
-          child: lat != 0.0 && lng != 0.0
-              ? GoogleMap(
-            markers: markers,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(lat, lng),
-              zoom: 16,
-            ),
-            mapType: MapType.hybrid,
-            //onMapCreated: onMapCreated,
-          ) :GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: LatLng(48.310258, 14.310297),
-              zoom: 13,
-            ),
-            mapType: MapType.hybrid,
-            //onMapCreated: onMapCreated,
-          ),
-        );
-        break;
-      case 2:
-        return Container(
-          child: new Center(
-            child: new Text(
-              "FOTO",
-              style: new TextStyle(fontSize: 30),
-            ),
-          ),
-        );
-        break;
-      case 3:
-        return Container(
-          child: new Center(
-            child: new Text(
-              "PROTOKOLL",
-              style: new TextStyle(fontSize: 30),
-            ),
-          ),
-        );
-        break;
-      case 4:
-        return Container(
-          child: new Center(
-            child: new Text(
-              "ATEMSCHUTZ",
-              style: new TextStyle(fontSize: 30),
-            ),
-          ),
-        );
-        break;
-      default:
-        new Container(
-          child: new Center(
-            child: new Text(
-              "Error: No Page found",
-              style: new TextStyle(fontSize: 30),
-            ),
-          ),
-        );
-    }
-  }
-
-  int _page = 0;
-  GlobalKey _bottomNavigationKey = GlobalKey();
-  double lat, lng;
-
-  void _setTitle(int index) {
-    setState(() {
-      markers = new HashSet<Marker>();
-      lat = infoState().getlat();
-      lng = infoState().getlng();
-      markers.add(new Marker(
-          markerId: MarkerId('marker_id_1'),
-          position: LatLng(lat, lng),
-          icon: BitmapDescriptor.defaultMarker));
-      var temp = Title.values[index].toString().split('.');
-      _title = temp[1];
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-          home: Scaffold(
-              backgroundColor: Colors.white10,
-              appBar: AppBar(
-                actions: [
-                  IconButton(icon: Icon(Icons.logout), onPressed: signOut),
-                ],
-                centerTitle: true,
-                title: Text(
-                  _title,
-                  style: TextStyle(fontSize: 30),
-                ),
-                backgroundColor: Colors.red,
+      home: Scaffold(
+        backgroundColor: Colors.white10,
+        appBar: AppBar(
+          actions: [
+            IconButton(icon: Icon(Icons.logout), onPressed: signOut),
+          ],
+          centerTitle: true,
+          title: Text(
+            _title,
+            style: TextStyle(fontSize: 30),
+          ),
+          backgroundColor: Color(0xfffea701),
+        ),
+        body: Center(
+              child: Container(
+                padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                child: info(ff),
               ),
-              bottomNavigationBar: CurvedNavigationBar(
-                key: _bottomNavigationKey,
-                index: pageIndex,
-                height: 50.0,
-                items: <Widget>[
-                  Icon(Icons.info, size: 30),
-                  Icon(Icons.map, size: 30),
-                  Icon(Icons.local_see, size: 30),
-                  Icon(Icons.format_list_bulleted, size: 30),
-                  Icon(Icons.alarm, size: 30),
-                ],
-                color: Colors.white,
-                buttonBackgroundColor: Colors.white,
-                backgroundColor: Colors.transparent,
-                animationCurve: Curves.easeInOut,
-                animationDuration: Duration(milliseconds: 300),
-                onTap: (trappedIndex) {
-                  setState(() {
-                    _setTitle(trappedIndex);
-                    print(trappedIndex);
-                    _showPage = _pageChooser(trappedIndex);
-                  });
-                },
-                letIndexChange: (index) => true,
-              ),
-              body: Container(
-                child: Center(
-                    child: _showPage,
-                ),
-              ))
-      );
+        ),
+      ),
+    );
   }
 }
 
