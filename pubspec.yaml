@@ -34,7 +34,7 @@ dependencies:
   fluttertoast: ^3.0.4
   avatar_glow: ^0.1.0
   bottom_navy_bar: ^3.0.0
-  shared_preferences: ^0.5.2
+  shared_preferences:
   permission:
   keyboard_visibility:
   curved_navigation_bar: ^0.3.7
@@ -52,7 +52,7 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 flutter_icons:
-  image_path: "assets/logo_small_icon_only_inverted.png"
+  image_path: "assets/images/logo_small_icon_only_inverted.png"
   android: true
   ios: true
 
