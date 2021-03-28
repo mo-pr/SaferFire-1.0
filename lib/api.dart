@@ -3,21 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class info extends StatefulWidget {
-
-  info(String ff) {
-    feuerwehr = ff;
-  }
-
   @override
   infoState createState() => infoState();
 }
 
-String feuerwehr;
 
 class infoState extends State<info> {
-  String ffString;
   AudioCache cache = AudioCache();
   var body, alarmBody, alarm;
   var num, time, stage, type, coords, subtype, feuerwehren, location, status;
@@ -26,23 +20,21 @@ class infoState extends State<info> {
   bool isQuit = false;
 
   void _readAPI() async {
-    //final res = await get(Uri.parse('https://intranet.ooelfv.at/webext2/rss/json_2tage.txt'));
-    final res = await get(Uri.parse('http://192.168.0.8/laufend.txt'));
+    final res = await get(Uri.parse('https://intranet.ooelfv.at/webext2/rss/json_2tage.txt'));
+    //final res = await get(Uri.parse('http://192.168.0.8/laufend.txt'));
     //final res = await get (Uri.parse('http://86.56.241.47/laufend.txt'));
-    setState(() {
-      ffString = feuerwehr;
-    });
     body = json.decode(res.body);
     alarmBody = body['einsaetze'];
     alarmAmount = body['cnt_einsaetze'];
   }
 
   void getAPI() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     await _readAPI();
     _lat = 0.0;
     _lng = 0.0;
     for (int i = 0; i < alarmAmount; i++) {
-      if (alarmBody[i.toString()].toString().contains(ffString)) {
+      if (alarmBody[i.toString()].toString().contains(preferences.getString("ff"))) {
         if (isQuit == false) {
           //cache.play('gong_bf.mp3');
         }
@@ -129,7 +121,7 @@ class infoState extends State<info> {
     getAPI();
     return num == null
         ? Container(
-      padding: EdgeInsets.only(top: (MediaQuery.of(context).size.height/3)),
+      padding: EdgeInsets.only(top: (MediaQuery.of(context).size.height)/100),
       alignment: FractionalOffset.center,
       child: Text(
         "Zur Zeit liegt kein Alarm vor",
