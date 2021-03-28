@@ -20,7 +20,6 @@ class LoginPage extends StatefulWidget {
 }
 
 Timer timer;
-String FF = "";
 Set<Marker> markers = new HashSet<Marker>();
 enum LoginStatus { notSignIn, signIn }
 enum Title { Info, Karte, Foto, Protokoll, Atemschutz, Abschluss }
@@ -155,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
     String message = data['message'];
     if (value == 1) {
       setState(() {
-        info(feuerwehr);
+        info();
       });
       print(message);
       registerToast(message);
@@ -665,7 +664,6 @@ class _MainMenuState extends State<MainMenu> {
     print("ID: " + id);
     print("USER: " + email);
     print("Feuerwehr: " + ff);
-    FF = ff;
   }
 
   @override
@@ -678,9 +676,9 @@ class _MainMenuState extends State<MainMenu> {
   String _title = "Info";
   int pageIndex = 0;
   int initialIndex = 0;
-  final info _infoPage = info(FF);
+  final info _infoPage = info();
 
-  Widget _showPage = new info(FF);
+  Widget _showPage = new info();
 
   Widget _pageChooser(int page) {
     switch (page) {
