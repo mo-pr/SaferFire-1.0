@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audio_cache.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,12 +11,10 @@ class info extends StatefulWidget {
 
 
 class infoState extends State<info> {
-  AudioCache cache = AudioCache();
   var body, alarmBody, alarm;
   var num, time, stage, type, coords, subtype, feuerwehren, location, status;
   static double _lat, _lng;
   int alarmAmount;
-  bool isQuit = false;
 
   void _readAPI() async {
     final res = await get(Uri.parse('https://intranet.ooelfv.at/webext2/rss/json_2tage.txt'));
@@ -35,9 +32,6 @@ class infoState extends State<info> {
     _lng = 0.0;
     for (int i = 0; i < alarmAmount; i++) {
       if (alarmBody[i.toString()].toString().contains(preferences.getString("ff"))) {
-        if (isQuit == false) {
-          //cache.play('gong_bf.mp3');
-        }
         setState(() {
           _lat = 0.0;
           _lng = 0.0;
@@ -50,7 +44,6 @@ class infoState extends State<info> {
           time = null;
           num = null;
           status = null;
-          isQuit = true;
           alarm = alarmBody[i.toString()]['einsatz'];
           num = alarm['num1'];
           time = "\n" + alarm['startzeit'];

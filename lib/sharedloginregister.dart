@@ -75,20 +75,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   login() async {
-    final response =
-        await http.post("http://192.168.0.8/api_verification.php", body: {
-      "flag": 1.toString(),
-      "email": email,
-      "password": password,
-      "fcm_token": "test_fcm_token"
-    });
     /*final response =
-        await http.post("http://86.56.241.47/api_verification.php", body: {
+        await http.post(Uri.parse("http://192.168.0.8/api_verification.php"), body: {
       "flag": 1.toString(),
       "email": email,
       "password": password,
       "fcm_token": "test_fcm_token"
     });*/
+    final response =
+        await http.post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
+      "flag": 1.toString(),
+      "email": email,
+      "password": password,
+      "fcm_token": "test_fcm_token"
+    });
     final data = jsonDecode(response.body);
     int value = data['value'];
     String message = data['message'];
@@ -133,22 +133,22 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   save() async {
-    final response =
-        await http.post("http://192.168.0.8/api_verification.php", body: {
-      "flag": 2.toString(),
-      "email": email,
-      "feuerwehr": feuerwehr,
-      "password": password,
-      "fcm_token": "test_fcm_token"
-    });
     /*final response =
-    await http.post("http://86.56.241.47/api_verification.php", body: {
+        await http.post(Uri.parse("http://192.168.0.8/api_verification.php"), body: {
       "flag": 2.toString(),
       "email": email,
       "feuerwehr": feuerwehr,
       "password": password,
       "fcm_token": "test_fcm_token"
     });*/
+    final response =
+    await http.post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
+      "flag": 2.toString(),
+      "email": email,
+      "feuerwehr": feuerwehr,
+      "password": password,
+      "fcm_token": "test_fcm_token"
+    });
     final data = jsonDecode(response.body);
     int value = data['value'];
     String message = data['message'];
@@ -185,7 +185,6 @@ class _LoginPageState extends State<LoginPage> {
       value = preferences.getInt("value");
       _loginStatus = value == 1 ? LoginStatus.signIn : LoginStatus.notSignIn;
     });
-    print(_loginStatus.toString());
   }
 
   signOut() async {
@@ -211,7 +210,6 @@ class _LoginPageState extends State<LoginPage> {
       onChange: (bool visible) {
         setState(() {
           _keyboardVisible = visible;
-          print("Keyboard State Changed : $visible");
         });
       },
     );
