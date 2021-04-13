@@ -48,6 +48,11 @@
    <key>NSLocationAlwaysUsageDescription</key>
    <string>This app needs access to location when in the background.</string>
 
+    <key>NSCameraUsageDescription</key>
+    <string>This app needs access to the camera when open.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app needs access to the microphone when open.</string>
+
    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
    <string>This app needs access to location when open and in the background.</string>
    <key>NSAppTransportSecurity</key>

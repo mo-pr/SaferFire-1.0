@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:safer_fire_test/cam.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api.dart';
@@ -674,6 +675,7 @@ class _MainMenuState extends State<MainMenu> {
   int pageIndex = 0;
   int initialIndex = 0;
   final info _infoPage = info();
+  final camera _cam = camera();
 
   Widget _showPage = new info();
 
@@ -705,14 +707,7 @@ class _MainMenuState extends State<MainMenu> {
         );
         break;
       case 2:
-        return Container(
-          child: new Center(
-            child: new Text(
-              "FOTO",
-              style: new TextStyle(fontSize: 30),
-            ),
-          ),
-        );
+        return _cam;
         break;
       case 3:
         return Container(
@@ -799,7 +794,6 @@ class _MainMenuState extends State<MainMenu> {
               onTap: (trappedIndex) {
                 setState(() {
                   _setTitle(trappedIndex);
-                  print(trappedIndex);
                   _showPage = _pageChooser(trappedIndex);
                 });
               },
