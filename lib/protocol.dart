@@ -17,7 +17,14 @@ class _ProtocolState extends State<Protocol> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
-        child: ListView.builder(
+        child: entries.isEmpty == true
+            ? Container(
+          child: Text(
+            "Keine Einträge vorhanden",
+            style: TextStyle(color: Colors.white, fontSize: 28),
+          ),
+        )
+            :ListView.builder(
             padding: const EdgeInsets.all(8),
             scrollDirection: Axis.vertical,
             itemCount: entries.length,
@@ -25,18 +32,15 @@ class _ProtocolState extends State<Protocol> {
               return Container(
                 color: Colors.transparent,
                 child: Card(
+                  color: Colors.white10,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  elevation: 0,
                   child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 7),
-                      child: Text(
-                        entries[index].toString(),
-                        style: TextStyle(color: Colors.white),
-                      )),
-                  color: Colors.transparent,
-                ),
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(entries[index].toString(), style: TextStyle(fontSize: 19.0,color: Colors.white),),
+                  ),
+                )
               );
             }),
       ),
@@ -51,6 +55,8 @@ class _ProtocolState extends State<Protocol> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(Constants.padding),
                 ),
+                elevation: 0,
+                backgroundColor: Colors.transparent,
                 child: contentBox(context),
               );
             },
@@ -94,13 +100,13 @@ class _ProtocolState extends State<Protocol> {
               ),
               SizedBox(height: 22,),
               Align(
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.bottomCenter,
                 child: FlatButton(
                     onPressed: () {
                       if(_controller.text != ""){
                         setState(() {
                           DateTime now = new DateTime.now();
-                          entries.add(new Entry(DateFormat('yyyy-MM-dd – kk:mm').format(now).toString(), _controller.text));
+                          entries.add(new Entry(DateFormat('dd.MM.yyyy – kk:mm:ss').format(now).toString(), _controller.text));
                           _controller.clear();
                         });
                       }
@@ -135,7 +141,7 @@ class Entry {
 
   @override
   String toString() {
-    return '$_time: $_text';
+    return '$_time\n $_text';
   }
 }
 

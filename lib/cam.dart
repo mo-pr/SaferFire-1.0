@@ -30,7 +30,7 @@ class _cameraState extends State<camera> {
         child: images.isEmpty == true
             ? Container(
                 child: Text(
-                  "No Image selected",
+                  "Keine Fotos vorhanden",
                   style: TextStyle(color: Colors.white, fontSize: 28),
                 ),
               )
@@ -56,7 +56,7 @@ class _cameraState extends State<camera> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: getImage,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.red,
         child: Icon(Icons.camera),
       ),
     );
