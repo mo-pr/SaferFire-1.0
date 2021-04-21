@@ -116,43 +116,14 @@ class InfoPage extends State<info> {
     return Scaffold(// you can use Container, it wont be a whole page
       //backgroundColor: Color(0xFFB40284A),
 
-      backgroundColor: Colors.grey[900], // background
-
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(
-          'Info',
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
+        //backgroundColor: Color(0xFF394640), // background anderer
+        backgroundColor: Color(0xFF264d5f), // anderer hintergrund farbe
       body: ListView(
         padding: EdgeInsets.all(32),
         children: [
           num == null ? comingAlert() : comingAlert()
         ],
       )
-    );
-  }
-
-  Widget test() {
-    return Stack(
-      children: <Widget>[
-        // Stroked text as border.
-        Text(
-          'Greetings, planet!',
-          style: TextStyle(fontSize: 40,
-              fontWeight: FontWeight.bold
-          ),
-        ),
-        // Solid text as fill.
-        Text(
-          'Greetings, planet!',
-          style: TextStyle(
-            fontSize: 40,
-            color: Colors.grey[300],
-          ),
-        ),
-      ],
     );
   }
 
