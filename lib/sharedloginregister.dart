@@ -755,6 +755,7 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
         home: Scaffold(
             backgroundColor: Colors.white10,
             appBar: AppBar(
