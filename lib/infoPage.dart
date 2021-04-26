@@ -117,7 +117,8 @@ class InfoPage extends State<info> {
       //backgroundColor: Color(0xFFB40284A),
 
         //backgroundColor: Color(0xFF394640), // background anderer
-        backgroundColor: Color(0xFF264d5f), // anderer hintergrund farbe
+        //backgroundColor: Color(0xFF264d5f), // anderer hintergrund farbe
+        backgroundColor: Colors.grey[900],
       body: ListView(
         padding: EdgeInsets.all(32),
         children: [
