@@ -76,20 +76,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   login() async {
-    final response =
+    /*final response =
         await http.post(Uri.parse("http://192.168.0.8/api_verification.php"), body: {
       "flag": 1.toString(),
       "email": email,
       "password": password,
       "fcm_token": "test_fcm_token"
-    });
-    /*final response =
+    });*/
+    final response =
         await http.post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
       "flag": 1.toString(),
       "email": email,
       "password": password,
       "fcm_token": "test_fcm_token"
-    });*/
+    });
     final data = jsonDecode(response.body);
     int value = data['value'];
     String message = data['message'];
@@ -134,22 +134,22 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   save() async {
-    final response =
+    /*final response =
         await http.post(Uri.parse("http://192.168.0.8/api_verification.php"), body: {
       "flag": 2.toString(),
       "email": email,
       "feuerwehr": feuerwehr,
       "password": password,
       "fcm_token": "test_fcm_token"
-    });
-    /*final response =
+    });*/
+    final response =
     await http.post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
       "flag": 2.toString(),
       "email": email,
       "feuerwehr": feuerwehr,
       "password": password,
       "fcm_token": "test_fcm_token"
-    });*/
+    });
     final data = jsonDecode(response.body);
     int value = data['value'];
     String message = data['message'];

@@ -36,9 +36,17 @@ class _ProtocolState extends State<Protocol> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(entries[index].toString(), style: TextStyle(fontSize: 19.0,color: Colors.white),),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      radius: Constants.padding,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(Constants.avatarRadius)),
+                          child: Image.asset("assets/images/logo_small_icon_only.png")
+                      ),
+                    ),
+                    title: Text(entries[index].toString(), style: TextStyle(fontSize: 19.0,color: Colors.white),),
                   ),
                 )
               );
@@ -141,7 +149,7 @@ class Entry {
 
   @override
   String toString() {
-    return '$_time\n $_text';
+    return '$_time\n\n$_text';
   }
 }
 

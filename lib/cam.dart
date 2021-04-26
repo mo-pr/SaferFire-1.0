@@ -38,6 +38,7 @@ class _cameraState extends State<camera> {
                 padding: const EdgeInsets.all(8),
                 scrollDirection: Axis.vertical,
                 itemCount: images.length,
+                //gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount:2),
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                     color: Colors.transparent,
