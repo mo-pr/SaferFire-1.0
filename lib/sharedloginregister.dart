@@ -13,6 +13,7 @@ import 'package:safer_fire_test/protocol.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api.dart';
+import 'oxygenPage.dart';
 import 'stylesLoginRegister.dart';
 
 class LoginPage extends StatefulWidget {
@@ -678,6 +679,7 @@ class _MainMenuState extends State<MainMenu> {
   final info _infoPage = info();
   final camera _cam = camera();
   final Protocol _protocol = Protocol();
+  final Oxygen _oxygen = Oxygen();
 
   Widget _showPage = new info();
 
@@ -713,14 +715,7 @@ class _MainMenuState extends State<MainMenu> {
         return _protocol;
         break;
       case 4:
-        return Container(
-          child: new Center(
-            child: new Text(
-              "ATEMSCHUTZ",
-              style: new TextStyle(fontSize: 30),
-            ),
-          ),
-        );
+        return _oxygen;
         break;
       default:
         new Container(
