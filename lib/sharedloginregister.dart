@@ -84,8 +84,8 @@ class _LoginPageState extends State<LoginPage> {
       "password": password,
       "fcm_token": "test_fcm_token"
     });*/
-    final response =
-        await http.post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
+    final response = await http
+        .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
       "flag": 1.toString(),
       "email": email,
       "password": password,
@@ -143,8 +143,8 @@ class _LoginPageState extends State<LoginPage> {
       "password": password,
       "fcm_token": "test_fcm_token"
     });*/
-    final response =
-    await http.post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
+    final response = await http
+        .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
       "flag": 2.toString(),
       "email": email,
       "feuerwehr": feuerwehr,
@@ -247,7 +247,6 @@ class _LoginPageState extends State<LoginPage> {
           _registerYOffset = windowHeight;
           break;
         case 1:
-          //_backgroundColor = Color(0xFFBD34C59);
           _backgroundColor = Color(0xFFB020030);
           _headingColor = Colors.white;
 
@@ -263,7 +262,6 @@ class _LoginPageState extends State<LoginPage> {
           _registerYOffset = windowHeight;
           break;
         case 2:
-          //_backgroundColor = Color(0xFFBD34C59);
           _backgroundColor = Color(0xFFB020030);
           _headingColor = Colors.white;
 
@@ -750,7 +748,7 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
             backgroundColor: Colors.white10,
             appBar: AppBar(

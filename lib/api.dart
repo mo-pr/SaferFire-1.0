@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -19,7 +18,7 @@ class infoState extends State<info> {
   void _readAPI() async {
     //final res = await get(Uri.parse('https://intranet.ooelfv.at/webext2/rss/json_2tage.txt'));
     //final res = await get(Uri.parse('http://192.168.0.8/laufend.txt'));
-    final res = await get (Uri.parse('http://86.56.241.47/laufend.txt'));
+    final res = await get(Uri.parse('http://86.56.241.47/laufend.txt'));
     body = json.decode(res.body);
     alarmBody = body['einsaetze'];
     alarmAmount = body['cnt_einsaetze'];

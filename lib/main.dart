@@ -6,7 +6,8 @@ void main() {
     home: LoginPage(),
   ));
 }
-class SaferFire extends StatefulWidget{
+
+class SaferFire extends StatefulWidget {
   @override
   _SaferFireState createState() => _SaferFireState();
 }
