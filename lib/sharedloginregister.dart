@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'package:email_validator/email_validator.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -50,7 +51,9 @@ class _LoginPageState extends State<LoginPage> {
 
   LoginStatus _loginStatus = LoginStatus.notSignIn;
   String email, password, feuerwehr;
-  final _key = new GlobalKey<FormState>(), _keyT = new GlobalKey<FormState>();
+  final _key = new GlobalKey<FormState>(),
+      _keyT = new GlobalKey<FormState>(),
+      _keyV = new GlobalKey<FormState>();
 
   bool _secureText = true;
 
@@ -58,6 +61,14 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _secureText = !_secureText;
     });
+  }
+
+  checkPass() {
+    final form = _keyV.currentState;
+    if(form.validate()){
+      form.save();
+      mailCheck();
+    }
   }
 
   check() {
@@ -76,20 +87,43 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  mailCheck() async {
+    /*final response = await http.post(
+        Uri.parse("http://192.168.0.8/api_verification.php"),
+        body: {"flag": 3.toString(), "email": email});*/
+    final response = await http
+        .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
+      "flag": 3.toString(),
+      "email": email
+    });
+    final data = jsonDecode(response.body);
+    int value = data['value'];
+    String message = data['message'];
+    String emailAPI = data['email'];
+    String id = data['id'];
+    String ff = data['ff'];
+    if (value == 1) {
+      setState(() {
+        final form = _keyV.currentState;
+        form.reset();
+      });
+      print(message);
+      loginToast(message);
+    } else {
+      print(message);
+      loginToast(message);
+    }
+  }
+
   login() async {
-    /*final response =
-        await http.post(Uri.parse("http://192.168.0.8/api_verification.php"), body: {
-      "flag": 1.toString(),
-      "email": email,
-      "password": password,
-      "fcm_token": "test_fcm_token"
-    });*/
+    /*final response = await http.post(
+        Uri.parse("http://192.168.0.8/api_verification.php"),
+        body: {"flag": 1.toString(), "email": email, "password": password});*/
     final response = await http
         .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
       "flag": 1.toString(),
       "email": email,
-      "password": password,
-      "fcm_token": "test_fcm_token"
+      "password": password
     });
     final data = jsonDecode(response.body);
     int value = data['value'];
@@ -135,21 +169,19 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   save() async {
-    /*final response =
-        await http.post(Uri.parse("http://192.168.0.8/api_verification.php"), body: {
+    /*final response = await http
+        .post(Uri.parse("http://192.168.0.8/api_verification.php"), body: {
       "flag": 2.toString(),
       "email": email,
       "feuerwehr": feuerwehr,
-      "password": password,
-      "fcm_token": "test_fcm_token"
+      "password": password
     });*/
     final response = await http
         .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
       "flag": 2.toString(),
       "email": email,
       "feuerwehr": feuerwehr,
-      "password": password,
-      "fcm_token": "test_fcm_token"
+      "password": password
     });
     final data = jsonDecode(response.body);
     int value = data['value'];
@@ -157,6 +189,9 @@ class _LoginPageState extends State<LoginPage> {
     if (value == 1) {
       setState(() {
         info();
+        _pageState = 1;
+        final form = _keyT.currentState;
+        form.reset();
       });
       print(message);
       registerToast(message);
@@ -175,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 1,
-        backgroundColor: Colors.white10,
+        backgroundColor: Colors.red,
         textColor: Colors.white);
   }
 
@@ -289,14 +324,6 @@ class _LoginPageState extends State<LoginPage> {
         home: Scaffold(
             body: Stack(
           children: <Widget>[
-            Container(
-              height: 480,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image:
-                          AssetImage('assets/images/login-backgroundOhne.png'),
-                      fit: BoxFit.fill)),
-            ),
             AnimatedContainer(
                 curve: Curves.fastLinearToSlowEaseIn,
                 duration: Duration(milliseconds: 1000),
@@ -304,39 +331,53 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _pageState = 0;
-                        });
-                      },
-                      child: Container(
-                        height: 280,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image:
-                                    AssetImage('assets/images/firewatch.png'),
-                                fit: BoxFit.fill)),
+                    Container(
+                      height: 280,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage('assets/images/firewatch.png'),
+                              fit: BoxFit.fill)),
+                    ),
+                    Container(
+                      width: windowWidth-40,
+                      child: Form(
+                        key: _keyV,
                         child: Column(
                           children: <Widget>[
-                            AnimatedContainer(
-                              curve: Curves.fastLinearToSlowEaseIn,
-                              duration: Duration(milliseconds: 1000),
-                              margin: EdgeInsets.only(
-                                top: _headingTop,
-                              ),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 10),
                               child: Text(
-                                " ",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold),
+                                "Forgot Password",
+                                style: TextStyle(fontSize: 20),
                               ),
                             ),
-                            Container(
-                              margin: EdgeInsets.all(20),
-                              padding: EdgeInsets.symmetric(horizontal: 32),
-                            )
+                            Card(
+                              elevation: 6.0,
+                              child: TextFormField(
+                                validator: (e) {
+                                  if (e.isEmpty) {
+                                    return "Please Insert Email";
+                                  }else if (EmailValidator.validate(e) == false) {
+                                    return "E-Mail muss dem Format (abc@def.ghi) entsprechen";
+                                  }
+                                },
+                                onSaved: (e) => email = e,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                                decoration: InputDecoration(
+                                    prefixIcon: Padding(
+                                      padding:
+                                      EdgeInsets.only(left: 20, right: 15),
+                                      child:
+                                      Icon(Icons.person, color: Colors.black),
+                                    ),
+                                    contentPadding: EdgeInsets.all(18),
+                                    labelText: "Email"),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -344,12 +385,9 @@ class _LoginPageState extends State<LoginPage> {
                     Container(
                       child: GestureDetector(
                         onTap: () {
+                          checkPass();
                           setState(() {
-                            if (_pageState != 0) {
-                              _pageState = 0;
-                            } else {
-                              _pageState = 1;
-                            }
+                            _pageState = 1;
                           });
                         },
                         child: Container(
@@ -357,11 +395,11 @@ class _LoginPageState extends State<LoginPage> {
                           padding: EdgeInsets.all(20),
                           width: double.infinity,
                           decoration: BoxDecoration(
-                              color: Color(0xFFB40284A),
+                              color: Colors.red,
                               borderRadius: BorderRadius.circular(50)),
                           child: Center(
                             child: Text(
-                              "Start Safer-Fire",
+                              "Send New Password",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 16),
                             ),
@@ -404,6 +442,8 @@ class _LoginPageState extends State<LoginPage> {
                             validator: (e) {
                               if (e.isEmpty) {
                                 return "Please Insert Email";
+                              }else if (EmailValidator.validate(e) == false) {
+                                return "E-Mail muss dem Format (abc@def.ghi) entsprechen";
                               }
                             },
                             onSaved: (e) => email = e,
@@ -482,7 +522,22 @@ class _LoginPageState extends State<LoginPage> {
                         child: OutlineBtn(
                           btnText: "Create New Account",
                         ),
-                      )
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      GestureDetector(
+                        child: Text(
+                          "Passwort vergessen?",
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            _pageState = 0;
+                          });
+                          //loginToast("Passwort vergessen");
+                        },
+                      ),
                     ],
                   ),
                 ],
@@ -547,6 +602,8 @@ class _LoginPageState extends State<LoginPage> {
                             validator: (e) {
                               if (e.isEmpty) {
                                 return "Please insert Email";
+                              }else if (EmailValidator.validate(e) == false) {
+                                return "E-Mail muss dem Format (abc@def.ghi) entsprechen";
                               }
                             },
                             onSaved: (e) => email = e,
@@ -599,9 +656,6 @@ class _LoginPageState extends State<LoginPage> {
                       GestureDetector(
                         onTap: () {
                           checkReg();
-                          setState(() {
-                            _pageState = 1;
-                          });
                         },
                         child: PrimaryButton(
                           btnText: "Create Account",
@@ -753,7 +807,9 @@ class _MainMenuState extends State<MainMenu> {
             backgroundColor: Colors.white10,
             appBar: AppBar(
               actions: [
-                IconButton(icon: Icon(Icons.logout), onPressed: signOut),
+                IconButton(icon: Icon(Icons.logout), onPressed: (){
+                  signOut();
+                }),
               ],
               centerTitle: true,
               title: Text(

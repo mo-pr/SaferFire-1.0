@@ -38,6 +38,10 @@ dependencies:
   keyboard_visibility:
   curved_navigation_bar: ^0.3.7
   image_picker:
+  email_validator:
+  syncfusion_flutter_pdf:
+  path_provider:
+  open_file:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -7,7 +7,7 @@ class Protocol extends StatefulWidget {
   _ProtocolState createState() => _ProtocolState();
 }
 
-List<Entry> entries = <Entry>[];
+List<Entry> protocolEntries = <Entry>[];
 
 class _ProtocolState extends State<Protocol> {
   TextEditingController _controller = new TextEditingController();
@@ -17,7 +17,7 @@ class _ProtocolState extends State<Protocol> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
-        child: entries.isEmpty == true
+        child: protocolEntries.isEmpty == true
             ? Container(
                 child: Text(
                   "Keine Einträge vorhanden",
@@ -27,7 +27,7 @@ class _ProtocolState extends State<Protocol> {
             : ListView.builder(
                 padding: const EdgeInsets.all(8),
                 scrollDirection: Axis.vertical,
-                itemCount: entries.length,
+                itemCount: protocolEntries.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                       color: Colors.transparent,
@@ -47,7 +47,7 @@ class _ProtocolState extends State<Protocol> {
                                     "assets/images/logo_small_icon_only.png")),
                           ),
                           title: Text(
-                            entries[index].toString(),
+                            protocolEntries[index].getString(),
                             style:
                                 TextStyle(fontSize: 19.0, color: Colors.white),
                           ),
@@ -118,12 +118,9 @@ class _ProtocolState extends State<Protocol> {
                     onPressed: () {
                       if (_controller.text != "") {
                         setState(() {
-                          DateTime now = new DateTime.now();
-                          entries.add(new Entry(
-                              DateFormat('dd.MM.yyyy – kk:mm:ss')
-                                  .format(now)
-                                  .toString(),
-                              _controller.text));
+                          protocolEntries.add(new Entry(
+                              DateTime.now(),
+                              _controller.text,protocolEntries.length+1));
                           _controller.clear();
                         });
                       }
@@ -156,13 +153,20 @@ class _ProtocolState extends State<Protocol> {
 }
 
 class Entry {
-  String _text, _time;
+  String _text;
+  DateTime _time;
+  int _entrynr;
+  Entry(this._time, this._text, this._entrynr);
 
-  Entry(this._time, this._text);
+  String getString() {
+    return DateFormat('dd.MM.yyyy – kk:mm:ss')
+        .format(_time)
+        .toString()+"\n\n$_text";
+  }
 
   @override
   String toString() {
-    return '$_time\n\n$_text';
+    return "Eintragnr.: "+_entrynr.toString()+" Zeit: "+_time.toIso8601String()+"\nText: "+_text;
   }
 }
 

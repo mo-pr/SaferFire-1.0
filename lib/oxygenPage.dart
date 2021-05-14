@@ -7,7 +7,7 @@ class Oxygen extends StatefulWidget {
   @override
   _OxygenState createState() => _OxygenState();
 }
-
+List<PDFEntry> persEntries = <PDFEntry>[];
 List<Entry> entries = <Entry>[];
 
 class _OxygenState extends State<Oxygen> {
@@ -43,11 +43,12 @@ class _OxygenState extends State<Oxygen> {
 
   void handleStartStop(int index) {
     if (entries[index]._timer.isRunning) {
-      debugPrint("WAS RUNNING");
       entries[index]._timer.stop();
-      entries.removeAt(index);
+      persEntries[index]._stoptime = DateTime.now();
     } else {
       entries[index]._timer.start();
+      entries[index]._time = DateFormat('kk:mm:ss').format(DateTime.now()).toString();
+      persEntries[index]._starttime = DateTime.now();
     }
     setState(() {});
   }
@@ -57,13 +58,16 @@ class _OxygenState extends State<Oxygen> {
         context: context,
         builder: (BuildContext context) {
           return new AlertDialog(
-              title: new Text("Trupp " + (index + 1).toString() + " zurück?"),
+              title: new Text("Trupp " + (index + 1).toString() + ": Wählen Sie eine Aktion"),
               actions: <Widget>[
                 new FlatButton(
-                    child: new Text('NEIN'),
-                    onPressed: () => Navigator.of(context).pop()),
+                    child: new Text('Start'),
+                    onPressed: () {
+                      handleStartStop(index);
+                      Navigator.of(context).pop();
+                    }),
                 new FlatButton(
-                    child: new Text('JA'),
+                    child: new Text('Stop'),
                     onPressed: () {
                       handleStartStop(index);
                       Navigator.of(context).pop();
@@ -110,13 +114,6 @@ class _OxygenState extends State<Oxygen> {
                                   ),
                                   SizedBox(
                                     height: 4,
-                                  ),
-                                  Text(
-                                    "Time: " + entries[index]._getTime(),
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold),
                                   ),
                                   Divider(
                                     height: 20,
@@ -328,22 +325,37 @@ class _OxygenState extends State<Oxygen> {
                         setState(() {
                           DateTime now = new DateTime.now();
                           entries.add(new Entry(
-                              DateFormat('kk:mm:ss').format(now).toString(),
                               _controller01.text,
                               _controller02.text,
                               _controller03.text,
                               entries.length + 1));
-
+                          persEntries.add(new PDFEntry(
+                              _controller01.text,
+                              _controller02.text,
+                              _controller03.text,
+                              entries.length));
                           entries[entries.length - 1]._pressure01 =
                               _pressure01.text;
-
+                          persEntries[entries.length - 1]._pressure01 =
+                              _pressure01.text;
+                          persEntries[entries.length-1]._people= 1;
                           if (_controller02.text != "") {
                             entries[entries.length - 1]._pressure02 =
                                 _pressure02.text;
                           }
+                          if (_controller02.text != "") {
+                            persEntries[entries.length - 1]._pressure02 =
+                                _pressure02.text;
+                            persEntries[entries.length-1]._people= 2;
+                          }
                           if (_controller03.text != "") {
                             entries[entries.length - 1]._pressure03 =
                                 _pressure03.text;
+                          }
+                          if (_controller03.text != "") {
+                            persEntries[entries.length - 1]._pressure03 =
+                                _pressure03.text;
+                            persEntries[entries.length-1]._people= 3;
                           }
                           _controller01.clear();
                           _controller02.clear();
@@ -352,7 +364,6 @@ class _OxygenState extends State<Oxygen> {
                           _pressure02.clear();
                           _pressure03.clear();
                           entries[entries.length - 1]._timer = Stopwatch();
-                          handleStartStop(entries.length - 1);
                         });
                         Navigator.of(context).pop();
                       }
@@ -395,8 +406,7 @@ class Entry {
   String _pressure02;
   String _pressure03;
 
-  Entry(_time, _person01, _person02, _person03, _number) {
-    this._time = _time;
+  Entry(_person01, _person02, _person03, _number) {
     this._person01 = _person01;
     this._person02 = _person02;
     this._person03 = _person03;
@@ -424,6 +434,43 @@ class Entry {
   @override
   String toString() {
     return '$_time\n$_person01';
+  }
+}
+
+class PDFEntry{
+  int _people;
+  int _entryNr;
+  String _person01;
+  String _person02;
+  String _person03;
+  DateTime _starttime;
+  DateTime _stoptime;
+  String _pressure01;
+  String _pressure02;
+  String _pressure03;
+
+  PDFEntry(_person01, _person02, _person03, _number) {
+    this._person01 = _person01;
+    this._person02 = _person02;
+    this._person03 = _person03;
+    this._entryNr = _number;
+    this._starttime = DateTime.now();
+    this._stoptime = DateTime.now();
+  }
+
+  @override
+  String toString() {
+    switch(_people){
+      case 1:
+        return "Truppnr.: "+_entryNr.toString()+" von: "+_starttime.toIso8601String()+" bis: "+_stoptime.toIso8601String()+"\n("+_person01+" "+_pressure01+"bar)";
+        break;
+      case 2:
+        return "Truppnr.: "+_entryNr.toString()+" von: "+_starttime.toIso8601String()+" bis: "+_stoptime.toIso8601String()+"\n("+_person01+" "+_pressure01+"bar) ""("+_person02+" "+_pressure02+"bar)";
+        break;
+      case 3:
+        return "Truppnr.: "+_entryNr.toString()+" von: "+_starttime.toIso8601String()+" bis: "+_stoptime.toIso8601String()+"\n("+_person01+" "+_pressure01+"bar) ""("+_person02+" "+_pressure02+"bar) ""("+_person03+" "+_pressure03+"bar)";
+        break;
+    }
   }
 }
 

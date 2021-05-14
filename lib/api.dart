@@ -1,7 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:open_file/open_file.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:safer_fire_test/oxygenPage.dart';
+import 'package:safer_fire_test/protocol.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class info extends StatefulWidget {
@@ -10,15 +17,32 @@ class info extends StatefulWidget {
 }
 
 class infoState extends State<info> {
+  Timer _timer;
   var body, alarmBody, alarm;
   var num, time, stage, type, coords, subtype, feuerwehren, location, status;
   static double _lat, _lng;
   int alarmAmount;
 
+  @override
+  void initState() {
+    super.initState();
+    _timer = new Timer.periodic(new Duration(milliseconds: 3000), (timer) {
+      setState(() {
+        getAPI();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   void _readAPI() async {
-    //final res = await get(Uri.parse('https://intranet.ooelfv.at/webext2/rss/json_2tage.txt'));
+    final res = await get(Uri.parse('https://intranet.ooelfv.at/webext2/rss/json_2tage.txt'));
     //final res = await get(Uri.parse('http://192.168.0.8/laufend.txt'));
-    final res = await get(Uri.parse('http://86.56.241.47/laufend.txt'));
+    //final res = await get(Uri.parse('http://86.56.241.47/laufend.txt'));
     body = json.decode(res.body);
     alarmBody = body['einsaetze'];
     alarmAmount = body['cnt_einsaetze'];
@@ -76,6 +100,7 @@ class infoState extends State<info> {
               "\nZusatz: " +
               alarm['adresse']['ecompl'];
           if (status.toString().contains('abgeschlossen')) {
+            createPDF(num+".pdf");
             _lat = 0.0;
             _lng = 0.0;
             location = null;
@@ -91,6 +116,59 @@ class infoState extends State<info> {
         });
       }
     }
+  }
+
+  Future<void> createPDF(String name)async{
+    String oxygen = persEntries.toString().replaceAll(", ", "\n").replaceAll("[", "").replaceAll("]", "");
+    String protocol = protocolEntries.toString().replaceAll(", ", "\n").replaceAll("[", "").replaceAll("]", "");
+    PdfDocument doc = PdfDocument();
+    final page = doc.pages.add();
+    final pageTwo = oxygen!= ""? doc.pages.add():null;
+    final pageThree = protocol!= ""? doc.pages.add():null;
+    PdfLayoutResult layoutResult = PdfTextElement(
+        text: num+subtype+type+location+"\nAlarmstufe: "+stage+time+feuerwehren,
+        font: PdfStandardFont(PdfFontFamily.helvetica, 12),
+        brush: PdfSolidBrush(PdfColor(0, 0, 0)))
+        .draw(
+        page: page,
+        bounds: Rect.fromLTWH(
+            0, 0, page.getClientSize().width, page.getClientSize().height),
+        format: PdfLayoutFormat(layoutType: PdfLayoutType.paginate));
+    page.graphics.drawLine(
+        PdfPen(PdfColor(255, 0, 0)),
+        Offset(0, layoutResult.bounds.bottom + 10),
+        Offset(page.getClientSize().width, layoutResult.bounds.bottom + 10));
+    PdfLayoutResult layoutResultTwo = PdfTextElement(
+        text: oxygen,
+        font: PdfStandardFont(PdfFontFamily.helvetica, 12),
+        brush: PdfSolidBrush(PdfColor(0, 0, 0)))
+        .draw(
+        page: pageTwo,
+        bounds: Rect.fromLTWH(
+            0, 0, page.getClientSize().width, page.getClientSize().height),
+        format: PdfLayoutFormat(layoutType: PdfLayoutType.paginate));
+    pageTwo.graphics.drawLine(
+        PdfPen(PdfColor(255, 0, 0)),
+        Offset(0, layoutResultTwo.bounds.bottom + 10),
+        Offset(pageTwo.getClientSize().width, layoutResultTwo.bounds.bottom + 10));
+    PdfLayoutResult layoutResultThree = PdfTextElement(
+        text: protocol,
+        font: PdfStandardFont(PdfFontFamily.helvetica, 12),
+        brush: PdfSolidBrush(PdfColor(0, 0, 0)))
+        .draw(
+        page: pageThree,
+        bounds: Rect.fromLTWH(
+            0, 0, page.getClientSize().width, page.getClientSize().height),
+        format: PdfLayoutFormat(layoutType: PdfLayoutType.paginate));
+    pageThree.graphics.drawLine(
+        PdfPen(PdfColor(255, 0, 0)),
+        Offset(0, layoutResultThree.bounds.bottom + 10),
+        Offset(pageThree.getClientSize().width, layoutResultThree.bounds.bottom + 10));
+    List<int> bytes = doc.save();
+    doc.dispose();
+    final path = (await getExternalStorageDirectory()).path;
+    final file = File('$path/$name');
+    await file.writeAsBytes(bytes, flush: true);
   }
 
   set lat(double value) {
