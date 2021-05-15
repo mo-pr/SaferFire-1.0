@@ -702,7 +702,7 @@ class _MainMenuState extends State<MainMenu> {
       widget.signOut();
     });
   }
-
+  Timer _timer;
   String email = "", id = "", ff = "";
   TabController tabController;
 
@@ -722,7 +722,7 @@ class _MainMenuState extends State<MainMenu> {
   void initState() {
     super.initState();
     getPref();
-    infoState().getAPI();
+    new Timer.periodic(new Duration(seconds: 3), (timer) {infoState().getAPI();});
   }
 
   String _title = "Info";
@@ -801,6 +801,9 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      infoState().getAPI();
+    });
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
