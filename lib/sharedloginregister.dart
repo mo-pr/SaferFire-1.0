@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
-import 'package:email_validator/email_validator.dart';
+import 'dart:ui';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -66,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
 
   checkPass() {
     final form = _keyV.currentState;
-    if(form.validate()){
+    if (form.validate()) {
       form.save();
       mailCheck();
     }
@@ -89,14 +91,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   mailCheck() async {
-    /*final response = await http.post(
+    final response = await http.post(
         Uri.parse("http://192.168.0.8/api_verification.php"),
-        body: {"flag": 3.toString(), "email": email});*/
-    final response = await http
+        body: {"flag": 3.toString(), "email": email});
+    /*final response = await http
         .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
       "flag": 3.toString(),
       "email": email
-    });
+    });*/
     final data = jsonDecode(response.body);
     int value = data['value'];
     String message = data['message'];
@@ -117,15 +119,15 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   login() async {
-    /*final response = await http.post(
+    final response = await http.post(
         Uri.parse("http://192.168.0.8/api_verification.php"),
-        body: {"flag": 1.toString(), "email": email, "password": password});*/
-    final response = await http
+        body: {"flag": 1.toString(), "email": email, "password": password});
+    /*final response = await http
         .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
       "flag": 1.toString(),
       "email": email,
       "password": password
-    });
+    });*/
     final data = jsonDecode(response.body);
     int value = data['value'];
     String message = data['message'];
@@ -170,20 +172,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   save() async {
-    /*final response = await http
+    final response = await http
         .post(Uri.parse("http://192.168.0.8/api_verification.php"), body: {
       "flag": 2.toString(),
       "email": email,
       "feuerwehr": feuerwehr,
       "password": password
-    });*/
-    final response = await http
+    });
+    /*final response = await http
         .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
       "flag": 2.toString(),
       "email": email,
       "feuerwehr": feuerwehr,
       "password": password
-    });
+    });*/
     final data = jsonDecode(response.body);
     int value = data['value'];
     String message = data['message'];
@@ -340,7 +342,7 @@ class _LoginPageState extends State<LoginPage> {
                               fit: BoxFit.fill)),
                     ),
                     Container(
-                      width: windowWidth-40,
+                      width: windowWidth - 40,
                       child: Form(
                         key: _keyV,
                         child: Column(
@@ -358,7 +360,8 @@ class _LoginPageState extends State<LoginPage> {
                                 validator: (e) {
                                   if (e.isEmpty) {
                                     return "Please Insert Email";
-                                  }else if (EmailValidator.validate(e) == false) {
+                                  } else if (EmailValidator.validate(e) ==
+                                      false) {
                                     return "E-Mail muss dem Format (abc@def.ghi) entsprechen";
                                   }
                                 },
@@ -371,9 +374,9 @@ class _LoginPageState extends State<LoginPage> {
                                 decoration: InputDecoration(
                                     prefixIcon: Padding(
                                       padding:
-                                      EdgeInsets.only(left: 20, right: 15),
-                                      child:
-                                      Icon(Icons.person, color: Colors.black),
+                                          EdgeInsets.only(left: 20, right: 15),
+                                      child: Icon(Icons.person,
+                                          color: Colors.black),
                                     ),
                                     contentPadding: EdgeInsets.all(18),
                                     labelText: "Email"),
@@ -443,7 +446,7 @@ class _LoginPageState extends State<LoginPage> {
                             validator: (e) {
                               if (e.isEmpty) {
                                 return "Please Insert Email";
-                              }else if (EmailValidator.validate(e) == false) {
+                              } else if (EmailValidator.validate(e) == false) {
                                 return "E-Mail muss dem Format (abc@def.ghi) entsprechen";
                               }
                             },
@@ -603,7 +606,7 @@ class _LoginPageState extends State<LoginPage> {
                             validator: (e) {
                               if (e.isEmpty) {
                                 return "Please insert Email";
-                              }else if (EmailValidator.validate(e) == false) {
+                              } else if (EmailValidator.validate(e) == false) {
                                 return "E-Mail muss dem Format (abc@def.ghi) entsprechen";
                               }
                             },
@@ -703,6 +706,7 @@ class _MainMenuState extends State<MainMenu> {
       widget.signOut();
     });
   }
+
   Timer _timer;
   String email = "", id = "", ff = "";
   TabController tabController;
@@ -723,7 +727,9 @@ class _MainMenuState extends State<MainMenu> {
   void initState() {
     super.initState();
     getPref();
-    new Timer.periodic(new Duration(seconds: 3), (timer) {infoState().getAPI();});
+    new Timer.periodic(new Duration(seconds: 3), (timer) {
+      infoState().getAPI();
+    });
   }
 
   String _title = "Info";
@@ -810,12 +816,33 @@ class _MainMenuState extends State<MainMenu> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
+            drawer: Theme(
+                data: Theme.of(context).copyWith(
+                  canvasColor: Colors.white.withOpacity(0.9),
+                ),
+                child: Drawer(
+                    child: Stack(children: <Widget>[
+                  /*BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5),
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white10))),*/
+                  ListView(padding: EdgeInsets.zero, children: <Widget>[
+                    DrawerHeader(child: Text('Safer.Fire',style: TextStyle(fontSize: 16),)),
+                    ListTile(
+                        leading: Icon(Icons.dashboard, color: Colors.white),
+                        title: Text("Dashboard"),
+                        onTap: () {})
+                  ])
+                ]))),
             backgroundColor: Colors.white10,
             appBar: AppBar(
               actions: [
-                IconButton(icon: Icon(Icons.logout), onPressed: (){
-                  signOut();
-                }),
+                IconButton(
+                    icon: Icon(Icons.logout),
+                    onPressed: () {
+                      signOut();
+                    }),
               ],
               centerTitle: true,
               title: Text(
