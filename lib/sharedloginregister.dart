@@ -10,6 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:safer_fire_test/cam.dart';
+import 'package:safer_fire_test/charts.dart';
 import 'package:safer_fire_test/protocol.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -729,16 +730,17 @@ class _MainMenuState extends State<MainMenu> {
   int pageIndex = 0;
   int initialIndex = 0;
   final info _infoPage = info();
+  final ChartsPage _chartsPage = ChartsPage();
   final camera _cam = camera();
   final Protocol _protocol = Protocol();
   final Oxygen _oxygen = Oxygen();
 
-  Widget _showPage = new info();
+  Widget _showPage = new ChartsPage();
 
   Widget _pageChooser(int page) {
     switch (page) {
       case 0:
-        return _infoPage;
+        return _chartsPage;
         break;
       case 1:
         return Container(
