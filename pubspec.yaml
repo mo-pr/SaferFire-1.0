@@ -27,16 +27,16 @@ dependencies:
   flutter_polyline_points:
   google_map_polyline:
   location:
-  http: ^0.12.2
-  flutter_local_notifications: ^3.0.2
-  share: ^0.6.0+1
-  fluttertoast: ^3.0.4
-  avatar_glow: ^0.1.0
-  bottom_navy_bar: ^3.0.0
+  http:
+  flutter_local_notifications:
+  share:
+  fluttertoast:
+  avatar_glow:
+  bottom_navy_bar:
   shared_preferences:
   permission:
   keyboard_visibility:
-  curved_navigation_bar: ^0.3.7
+  curved_navigation_bar:
   image_picker:
   email_validator:
   syncfusion_flutter_pdf:

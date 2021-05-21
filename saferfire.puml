@@ -1,0 +1,306 @@
+@startuml
+set namespaceSeparator ::
+
+class "safer_fire_test::api.dart::info" {
+  +infoState* createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "safer_fire_test::api.dart::info"
+
+class "safer_fire_test::api.dart::infoState" {
+  -Timer* _timer
+  +double* lat
+  +dynamic lng
+  -void _readAPI()
+  +void initState()
+  +void dispose()
+  +void getAPI()
+  +Future<void>* createPDF()
+  +double* getlat()
+  +double* getlng()
+  +Widget* build()
+}
+
+"safer_fire_test::api.dart::infoState" o-- "dart::async::Timer*"
+"flutter::src::widgets::framework.dart::State" <|-- "safer_fire_test::api.dart::infoState"
+
+class "safer_fire_test::cam.dart::camera" {
+  +_cameraState* createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "safer_fire_test::cam.dart::camera"
+
+class "safer_fire_test::cam.dart::_cameraState" {
+  -File* _image
+  +ImagePicker* imagePicker
+  +Future<dynamic>* getImage()
+  +Widget* build()
+}
+
+"safer_fire_test::cam.dart::_cameraState" o-- "dart::io::File*"
+"safer_fire_test::cam.dart::_cameraState" o-- "image_picker::image_picker.dart::ImagePicker*"
+"flutter::src::widgets::framework.dart::State" <|-- "safer_fire_test::cam.dart::_cameraState"
+
+class "safer_fire_test::main.dart::SaferFire" {
+  +_SaferFireState* createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "safer_fire_test::main.dart::SaferFire"
+
+class "safer_fire_test::main.dart::_SaferFireState" {
+  +Widget* build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "safer_fire_test::main.dart::_SaferFireState"
+
+class "safer_fire_test::oxygenPage.dart::Oxygen" {
+  +_OxygenState* createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "safer_fire_test::oxygenPage.dart::Oxygen"
+
+class "safer_fire_test::oxygenPage.dart::_OxygenState" {
+  -Timer* _timer
+  -TextEditingController* _controller01
+  -TextEditingController* _controller02
+  -TextEditingController* _controller03
+  -TextEditingController* _pressure01
+  -TextEditingController* _pressure02
+  -TextEditingController* _pressure03
+  +String* formatTime()
+  +void initState()
+  +void dispose()
+  +void handleStartStop()
+  -void _promptRemoveTodoItem()
+  +Widget* build()
+  +dynamic contentBox()
+  +dynamic pressureBox()
+}
+
+"safer_fire_test::oxygenPage.dart::_OxygenState" o-- "dart::async::Timer*"
+"safer_fire_test::oxygenPage.dart::_OxygenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController*"
+"flutter::src::widgets::framework.dart::State" <|-- "safer_fire_test::oxygenPage.dart::_OxygenState"
+
+class "safer_fire_test::oxygenPage.dart::Entry" {
+  -Stopwatch* _timer
+  -int* _entryNr
+  -String* _person01
+  -String* _person02
+  -String* _person03
+  -String* _time
+  -String* _pressure01
+  -String* _pressure02
+  -String* _pressure03
+  +int* entryNr
+  -String* _getNames()
+  -String* _getTime()
+  +String* toString()
+}
+
+class "safer_fire_test::oxygenPage.dart::PDFEntry" {
+  -int* _people
+  -int* _entryNr
+  -String* _person01
+  -String* _person02
+  -String* _person03
+  -DateTime* _starttime
+  -DateTime* _stoptime
+  -String* _pressure01
+  -String* _pressure02
+  -String* _pressure03
+  +String* toString()
+}
+
+class "safer_fire_test::oxygenPage.dart::Constants" {
+  {static} +double* padding
+  {static} +double* avatarRadius
+}
+
+class "safer_fire_test::protocol.dart::Protocol" {
+  +_ProtocolState* createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "safer_fire_test::protocol.dart::Protocol"
+
+class "safer_fire_test::protocol.dart::_ProtocolState" {
+  -TextEditingController* _controller
+  +Widget* build()
+  +dynamic contentBox()
+}
+
+"safer_fire_test::protocol.dart::_ProtocolState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController*"
+"flutter::src::widgets::framework.dart::State" <|-- "safer_fire_test::protocol.dart::_ProtocolState"
+
+class "safer_fire_test::protocol.dart::Entry" {
+  -String* _text
+  -DateTime* _time
+  -int* _entrynr
+  +String* getString()
+  +String* toString()
+}
+
+class "safer_fire_test::protocol.dart::Constants" {
+  {static} +double* padding
+  {static} +double* avatarRadius
+}
+
+class "safer_fire_test::sharedloginregister.dart::LoginStatus" {
+  +int* index
+  {static} +List<LoginStatus*>* values
+  {static} +LoginStatus* notSignIn
+  {static} +LoginStatus* signIn
+}
+
+"safer_fire_test::sharedloginregister.dart::LoginStatus" o-- "safer_fire_test::sharedloginregister.dart::LoginStatus*"
+
+class "safer_fire_test::sharedloginregister.dart::Title" {
+  +int* index
+  {static} +List<Title*>* values
+  {static} +Title* Info
+  {static} +Title* Karte
+  {static} +Title* Foto
+  {static} +Title* Protokoll
+  {static} +Title* Atemschutz
+  {static} +Title* Abschluss
+}
+
+"safer_fire_test::sharedloginregister.dart::Title" o-- "safer_fire_test::sharedloginregister.dart::Title*"
+
+class "safer_fire_test::sharedloginregister.dart::LoginPage" {
+  +_LoginPageState* createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "safer_fire_test::sharedloginregister.dart::LoginPage"
+
+class "safer_fire_test::sharedloginregister.dart::_LoginPageState" {
+  -int* _pageState
+  -Color* _backgroundColor
+  -Color* _headingColor
+  -double* _headingTop
+  -double* _loginWidth
+  -double* _loginHeight
+  -double* _loginOpacity
+  -double* _loginYOffset
+  -double* _loginXOffset
+  -double* _registerYOffset
+  -double* _registerHeight
+  +double* windowWidth
+  +double* windowHeight
+  -bool* _keyboardVisible
+  -LoginStatus* _loginStatus
+  +String* email
+  +String* password
+  +String* feuerwehr
+  -GlobalKey<FormState*>* _key
+  -GlobalKey<FormState*>* _keyT
+  -GlobalKey<FormState*>* _keyV
+  -bool* _secureText
+  +dynamic value
+  +dynamic showHide()
+  +dynamic checkPass()
+  +dynamic check()
+  +dynamic checkReg()
+  +dynamic mailCheck()
+  +dynamic login()
+  +dynamic loginToast()
+  +dynamic savePref()
+  +dynamic save()
+  +dynamic registerToast()
+  +dynamic getPref()
+  +dynamic signOut()
+  +void initState()
+  +Widget* build()
+}
+
+"safer_fire_test::sharedloginregister.dart::_LoginPageState" o-- "dart::ui::Color*"
+"safer_fire_test::sharedloginregister.dart::_LoginPageState" o-- "safer_fire_test::sharedloginregister.dart::LoginStatus*"
+"safer_fire_test::sharedloginregister.dart::_LoginPageState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState*>*"
+"flutter::src::widgets::framework.dart::State" <|-- "safer_fire_test::sharedloginregister.dart::_LoginPageState"
+
+class "safer_fire_test::sharedloginregister.dart::MainMenu" {
+  +void Function()* signOut
+  +_MainMenuState* createState()
+}
+
+"safer_fire_test::sharedloginregister.dart::MainMenu" o-- "dart::ui::void Function()*"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "safer_fire_test::sharedloginregister.dart::MainMenu"
+
+class "safer_fire_test::sharedloginregister.dart::_MainMenuState" {
+  -Timer* _timer
+  +String* email
+  +String* id
+  +String* ff
+  +TabController* tabController
+  -String* _title
+  +int* pageIndex
+  +int* initialIndex
+  -info* _infoPage
+  -camera* _cam
+  -Protocol* _protocol
+  -Oxygen* _oxygen
+  -Widget* _showPage
+  -int* _page
+  -GlobalKey<State<StatefulWidget*>*>* _bottomNavigationKey
+  +double* lat
+  +double* lng
+  +dynamic signOut()
+  +dynamic getPref()
+  +void initState()
+  -Widget* _pageChooser()
+  -void _setTitle()
+  +Widget* build()
+}
+
+"safer_fire_test::sharedloginregister.dart::_MainMenuState" o-- "dart::async::Timer*"
+"safer_fire_test::sharedloginregister.dart::_MainMenuState" o-- "flutter::src::material::tab_controller.dart::TabController*"
+"safer_fire_test::sharedloginregister.dart::_MainMenuState" o-- "safer_fire_test::api.dart::info*"
+"safer_fire_test::sharedloginregister.dart::_MainMenuState" o-- "safer_fire_test::cam.dart::camera*"
+"safer_fire_test::sharedloginregister.dart::_MainMenuState" o-- "safer_fire_test::protocol.dart::Protocol*"
+"safer_fire_test::sharedloginregister.dart::_MainMenuState" o-- "safer_fire_test::oxygenPage.dart::Oxygen*"
+"safer_fire_test::sharedloginregister.dart::_MainMenuState" o-- "flutter::src::widgets::framework.dart::Widget*"
+"safer_fire_test::sharedloginregister.dart::_MainMenuState" o-- "flutter::src::widgets::framework.dart::GlobalKey<State<StatefulWidget*>*>*"
+"flutter::src::widgets::framework.dart::State" <|-- "safer_fire_test::sharedloginregister.dart::_MainMenuState"
+
+class "safer_fire_test::stylesLoginRegister.dart::InputWithIcon" {
+  +IconData* icon
+  +String* hint
+  +_InputWithIconState* createState()
+}
+
+"safer_fire_test::stylesLoginRegister.dart::InputWithIcon" o-- "flutter::src::widgets::icon_data.dart::IconData*"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "safer_fire_test::stylesLoginRegister.dart::InputWithIcon"
+
+class "safer_fire_test::stylesLoginRegister.dart::_InputWithIconState" {
+  +Widget* build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "safer_fire_test::stylesLoginRegister.dart::_InputWithIconState"
+
+class "safer_fire_test::stylesLoginRegister.dart::OutlineBtn" {
+  +String* btnText
+  +_OutlineBtnState* createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "safer_fire_test::stylesLoginRegister.dart::OutlineBtn"
+
+class "safer_fire_test::stylesLoginRegister.dart::_OutlineBtnState" {
+  +Widget* build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "safer_fire_test::stylesLoginRegister.dart::_OutlineBtnState"
+
+class "safer_fire_test::stylesLoginRegister.dart::PrimaryButton" {
+  +String* btnText
+  +_PrimaryButtonState* createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "safer_fire_test::stylesLoginRegister.dart::PrimaryButton"
+
+class "safer_fire_test::stylesLoginRegister.dart::_PrimaryButtonState" {
+  +Widget* build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "safer_fire_test::stylesLoginRegister.dart::_PrimaryButtonState"
+
+
+@enduml

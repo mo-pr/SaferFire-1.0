@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:ui';
-
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -91,14 +90,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   mailCheck() async {
-    final response = await http.post(
+    /*final response = await http.post(
         Uri.parse("http://192.168.0.8/api_verification.php"),
-        body: {"flag": 3.toString(), "email": email});
-    /*final response = await http
+        body: {"flag": 3.toString(), "email": email});*/
+    final response = await http
         .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
       "flag": 3.toString(),
       "email": email
-    });*/
+    });
     final data = jsonDecode(response.body);
     int value = data['value'];
     String message = data['message'];
@@ -119,15 +118,15 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   login() async {
-    final response = await http.post(
+    /*final response = await http.post(
         Uri.parse("http://192.168.0.8/api_verification.php"),
-        body: {"flag": 1.toString(), "email": email, "password": password});
-    /*final response = await http
+        body: {"flag": 1.toString(), "email": email, "password": password});*/
+    final response = await http
         .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
       "flag": 1.toString(),
       "email": email,
       "password": password
-    });*/
+    });
     final data = jsonDecode(response.body);
     int value = data['value'];
     String message = data['message'];
@@ -155,7 +154,6 @@ class _LoginPageState extends State<LoginPage> {
         msg: toast,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
         backgroundColor: Colors.red,
         textColor: Colors.white);
   }
@@ -172,20 +170,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   save() async {
-    final response = await http
+    /*final response = await http
         .post(Uri.parse("http://192.168.0.8/api_verification.php"), body: {
       "flag": 2.toString(),
       "email": email,
       "feuerwehr": feuerwehr,
       "password": password
-    });
-    /*final response = await http
+    });*/
+    final response = await http
         .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
       "flag": 2.toString(),
       "email": email,
       "feuerwehr": feuerwehr,
       "password": password
-    });*/
+    });
     final data = jsonDecode(response.body);
     int value = data['value'];
     String message = data['message'];
@@ -212,7 +210,6 @@ class _LoginPageState extends State<LoginPage> {
         msg: toast,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
         backgroundColor: Colors.red,
         textColor: Colors.white);
   }
@@ -230,16 +227,12 @@ class _LoginPageState extends State<LoginPage> {
   signOut() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      preferences.setInt("value", null);
-      preferences.setString("email", null);
-      preferences.setString("id", null);
-      preferences.setString('ff', null);
+      preferences.clear();
       preferences.commit();
       _loginStatus = LoginStatus.notSignIn;
     });
     Navigator.pop(context);
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LoginPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
   @override
@@ -375,7 +368,7 @@ class _LoginPageState extends State<LoginPage> {
                                     prefixIcon: Padding(
                                       padding:
                                           EdgeInsets.only(left: 20, right: 15),
-                                      child: Icon(Icons.person,
+                                      child: Icon(Icons.email,
                                           color: Colors.black),
                                     ),
                                     contentPadding: EdgeInsets.all(18),
@@ -460,7 +453,7 @@ class _LoginPageState extends State<LoginPage> {
                                 prefixIcon: Padding(
                                   padding: EdgeInsets.only(left: 20, right: 15),
                                   child:
-                                      Icon(Icons.person, color: Colors.black),
+                                      Icon(Icons.email, color: Colors.black),
                                 ),
                                 contentPadding: EdgeInsets.all(18),
                                 labelText: "Email"),
@@ -592,7 +585,7 @@ class _LoginPageState extends State<LoginPage> {
                                 prefixIcon: Padding(
                                   padding: EdgeInsets.only(left: 20, right: 15),
                                   child:
-                                      Icon(Icons.person, color: Colors.black),
+                                      Icon(Icons.local_fire_department, color: Colors.black),
                                 ),
                                 contentPadding: EdgeInsets.all(18),
                                 labelText: "Firestation"),
@@ -751,7 +744,7 @@ class _MainMenuState extends State<MainMenu> {
         break;
       case 1:
         return Container(
-          child: lat != 0.0 && lng != 0.0
+          child: lat != null && lng != null && lat != 0 && lng != 0
               ? GoogleMap(
                   markers: markers,
                   initialCameraPosition: CameraPosition(
@@ -799,10 +792,12 @@ class _MainMenuState extends State<MainMenu> {
       markers = new HashSet<Marker>();
       lat = infoState().getlat();
       lng = infoState().getlng();
-      markers.add(new Marker(
-          markerId: MarkerId('marker_id_1'),
-          position: LatLng(lat, lng),
-          icon: BitmapDescriptor.defaultMarker));
+      if(lat != null && lng != null&&lat != 0 && lng != 0){
+        markers.add(new Marker(
+            markerId: MarkerId('marker_id_1'),
+            position: LatLng(lat, lng),
+            icon: BitmapDescriptor.defaultMarker));
+      }
       var temp = Title.values[index].toString().split('.');
       _title = temp[1];
     });
@@ -818,21 +813,34 @@ class _MainMenuState extends State<MainMenu> {
         home: Scaffold(
             drawer: Theme(
                 data: Theme.of(context).copyWith(
-                  canvasColor: Colors.white.withOpacity(0.9),
+                  canvasColor: Colors.red[800].withOpacity(0.9),
                 ),
                 child: Drawer(
                     child: Stack(children: <Widget>[
-                  /*BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5),
-                      child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white10))),*/
                   ListView(padding: EdgeInsets.zero, children: <Widget>[
-                    DrawerHeader(child: Text('Safer.Fire',style: TextStyle(fontSize: 16),)),
+                    DrawerHeader(child: Container(
+                      padding: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage('assets/images/logo.png'),
+                              fit: BoxFit.scaleDown)),
+                    ),),
                     ListTile(
-                        leading: Icon(Icons.dashboard, color: Colors.white),
-                        title: Text("Dashboard"),
-                        onTap: () {})
+                        leading: Icon(Icons.directions_car, color: Colors.white),
+                        title: Text("Rettungskarte",style: TextStyle(color: Colors.white)),
+                        onTap: () {}),
+                    ListTile(
+                        leading: Icon(Icons.warning_rounded, color: Colors.white),
+                        title: Text("Gefahrgut",style: TextStyle(color: Colors.white)),
+                        onTap: () {}),
+                    ListTile(
+                        leading: Icon(Icons.map_rounded, color: Colors.white),
+                        title: Text("Wasserkarte",style: TextStyle(color: Colors.white)),
+                        onTap: () {}),
+                    ListTile(
+                        leading: Icon(Icons.poll_rounded, color: Colors.white),
+                        title: Text("Statistik",style: TextStyle(color: Colors.white)),
+                        onTap: () {}),
                   ])
                 ]))),
             backgroundColor: Colors.white10,
