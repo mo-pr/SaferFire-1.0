@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -7,16 +6,16 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:keyboard_visibility/keyboard_visibility.dart';
-import 'package:safer_fire_test/cam.dart';
-import 'package:safer_fire_test/charts.dart';
-import 'package:safer_fire_test/protocol.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'adr.dart';
 import 'api.dart';
+import 'cam.dart';
+import 'map.dart';
 import 'oxygenPage.dart';
+import 'protocol.dart';
 import 'stylesLoginRegister.dart';
 
 class LoginPage extends StatefulWidget {
@@ -25,14 +24,13 @@ class LoginPage extends StatefulWidget {
 }
 
 Timer timer;
-Set<Marker> markers = new HashSet<Marker>();
 enum LoginStatus { notSignIn, signIn }
 enum Title { Info, Karte, Foto, Protokoll, Atemschutz, Abschluss }
 
 class _LoginPageState extends State<LoginPage> {
   int _pageState = 1;
 
-  var _backgroundColor = Colors.red;
+  var _backgroundColor = Colors.white;
   var _headingColor = Color(0xFFB40284A);
 
   double _headingTop = 100;
@@ -232,7 +230,8 @@ class _LoginPageState extends State<LoginPage> {
       _loginStatus = LoginStatus.notSignIn;
     });
     Navigator.pop(context);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
   @override
@@ -278,7 +277,7 @@ class _LoginPageState extends State<LoginPage> {
           _registerYOffset = windowHeight;
           break;
         case 1:
-          _backgroundColor = Colors.red;
+          _backgroundColor = Color(0xFFB020030);
           _headingColor = Colors.white;
 
           _headingTop = 90;
@@ -293,7 +292,7 @@ class _LoginPageState extends State<LoginPage> {
           _registerYOffset = windowHeight;
           break;
         case 2:
-          _backgroundColor = Colors.red;
+          _backgroundColor = Color(0xFFB020030);
           _headingColor = Colors.white;
 
           _headingTop = 80;
@@ -452,8 +451,7 @@ class _LoginPageState extends State<LoginPage> {
                             decoration: InputDecoration(
                                 prefixIcon: Padding(
                                   padding: EdgeInsets.only(left: 20, right: 15),
-                                  child:
-                                      Icon(Icons.email, color: Colors.black),
+                                  child: Icon(Icons.email, color: Colors.black),
                                 ),
                                 contentPadding: EdgeInsets.all(18),
                                 labelText: "Email"),
@@ -584,8 +582,8 @@ class _LoginPageState extends State<LoginPage> {
                             decoration: InputDecoration(
                                 prefixIcon: Padding(
                                   padding: EdgeInsets.only(left: 20, right: 15),
-                                  child:
-                                      Icon(Icons.local_fire_department, color: Colors.black),
+                                  child: Icon(Icons.local_fire_department,
+                                      color: Colors.black),
                                 ),
                                 contentPadding: EdgeInsets.all(18),
                                 labelText: "Firestation"),
@@ -690,10 +688,10 @@ class MainMenu extends StatefulWidget {
   MainMenu(this.signOut);
 
   @override
-  _MainMenuState createState() => _MainMenuState();
+  MainMenuState createState() => MainMenuState();
 }
 
-class _MainMenuState extends State<MainMenu> {
+class MainMenuState extends State<MainMenu> {
   signOut() {
     setState(() {
       widget.signOut();
@@ -729,13 +727,13 @@ class _MainMenuState extends State<MainMenu> {
   int pageIndex = 0;
   int initialIndex = 0;
   final info _infoPage = info();
-  //final ChartsPage _chartsPage = ChartsPage();
   final camera _cam = camera();
   final Protocol _protocol = Protocol();
   final Oxygen _oxygen = Oxygen();
-  final ChartsPage _chart = ChartsPage();
+  final map _map = map();
+  final adr _adr = adr();
 
-  Widget _showPage = new ChartsPage();
+  Widget _showPage = new info();
 
   Widget _pageChooser(int page) {
     switch (page) {
@@ -743,30 +741,15 @@ class _MainMenuState extends State<MainMenu> {
         return _infoPage;
         break;
       case 1:
-        return Container(
-          child: lat != null && lng != null && lat != 0 && lng != 0
-              ? GoogleMap(
-                  markers: markers,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(lat, lng),
-                    zoom: 16,
-                  ),
-                  mapType: MapType.hybrid,
-                )
-              : GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(48.310258, 14.310297),
-                    zoom: 13,
-                  ),
-                  mapType: MapType.hybrid,
-                ),
-        );
+        /*final CurvedNavigationBarState navBarState = _bottomNavigationKey.currentState;
+        navBarState.setPage(0);*/
+        return _map;
         break;
       case 2:
         return _cam;
         break;
       case 3:
-        return _chart;
+        return _protocol;
         break;
       case 4:
         return _oxygen;
@@ -789,15 +772,8 @@ class _MainMenuState extends State<MainMenu> {
 
   void _setTitle(int index) {
     setState(() {
-      markers = new HashSet<Marker>();
       lat = infoState().getlat();
       lng = infoState().getlng();
-      if(lat != null && lng != null&&lat != 0 && lng != 0){
-        markers.add(new Marker(
-            markerId: MarkerId('marker_id_1'),
-            position: LatLng(lat, lng),
-            icon: BitmapDescriptor.defaultMarker));
-      }
       var temp = Title.values[index].toString().split('.');
       _title = temp[1];
     });
@@ -818,28 +794,39 @@ class _MainMenuState extends State<MainMenu> {
                 child: Drawer(
                     child: Stack(children: <Widget>[
                   ListView(padding: EdgeInsets.zero, children: <Widget>[
-                    DrawerHeader(child: Container(
-                      padding: EdgeInsets.zero,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('assets/images/logo.png'),
-                              fit: BoxFit.scaleDown)),
-                    ),),
+                    DrawerHeader(
+                      child: Container(
+                        padding: EdgeInsets.zero,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/images/logo.png'),
+                                fit: BoxFit.scaleDown)),
+                      ),
+                    ),
                     ListTile(
-                        leading: Icon(Icons.directions_car, color: Colors.white),
-                        title: Text("Rettungskarte",style: TextStyle(color: Colors.white)),
+                        leading:
+                            Icon(Icons.directions_car, color: Colors.white),
+                        title: Text("Rettungskarte",
+                            style: TextStyle(color: Colors.white)),
                         onTap: () {}),
                     ListTile(
-                        leading: Icon(Icons.warning_rounded, color: Colors.white),
-                        title: Text("Gefahrgut",style: TextStyle(color: Colors.white)),
-                        onTap: () {}),
+                        leading:
+                            Icon(Icons.warning_rounded, color: Colors.white),
+                        title: Text("Gefahrgut",
+                            style: TextStyle(color: Colors.white)),
+                        onTap: () {
+                          Navigator.push(
+                            context, MaterialPageRoute(builder: (context) => _adr));
+                        }),
                     ListTile(
                         leading: Icon(Icons.map_rounded, color: Colors.white),
-                        title: Text("Wasserkarte",style: TextStyle(color: Colors.white)),
+                        title: Text("Wasserkarte",
+                            style: TextStyle(color: Colors.white)),
                         onTap: () {}),
                     ListTile(
                         leading: Icon(Icons.poll_rounded, color: Colors.white),
-                        title: Text("Statistik",style: TextStyle(color: Colors.white)),
+                        title: Text("Statistik",
+                            style: TextStyle(color: Colors.white)),
                         onTap: () {}),
                   ])
                 ]))),
