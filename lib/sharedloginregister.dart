@@ -31,7 +31,7 @@ enum Title { Info, Karte, Foto, Protokoll, Atemschutz, Abschluss }
 class _LoginPageState extends State<LoginPage> {
   int _pageState = 1;
 
-  var _backgroundColor = Colors.white;
+  var _backgroundColor = Colors.red;
   var _headingColor = Color(0xFFB40284A);
 
   double _headingTop = 100;
@@ -283,7 +283,7 @@ class _LoginPageState extends State<LoginPage> {
           _registerYOffset = windowHeight;
           break;
         case 1:
-          _backgroundColor = Color(0xFFB020030);
+          _backgroundColor = Colors.red;
           _headingColor = Colors.white;
 
           _headingTop = 90;
@@ -298,7 +298,7 @@ class _LoginPageState extends State<LoginPage> {
           _registerYOffset = windowHeight;
           break;
         case 2:
-          _backgroundColor = Color(0xFFB020030);
+          _backgroundColor = Colors.red;
           _headingColor = Colors.white;
 
           _headingTop = 80;

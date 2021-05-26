@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,178 +8,175 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class ChartsPage extends StatefulWidget {
-  @override
-  ChartsPageState createState() => ChartsPageState();
-}
+// Zeiten Daten
+List<charts.Series<Task, String>> _timeSharing;
 
-class ChartsPageState extends State<ChartsPage> {
-  List<charts.Series<Pollution, String>> _seriesData;
-  List<charts.Series<Task, String>> _seriesPieData;
-  List<charts.Series<Sales, int>> _seriesLineData;
+// UnfallType Daten
+var accidentTypeDataFront;
+List<charts.Series<Pollution, String>> _accidentLevel;
+List<charts.Series<Task, String>> _accidentType;
 
-  _generateData() {
-    var data1 = [
-      new Pollution(1980, 'USA', 30),
-      new Pollution(1980, 'Asia', 40),
-      new Pollution(1980, 'Europe', 10),
-    ];
-    var data2 = [
-      new Pollution(1985, 'USA', 100),
-      new Pollution(1980, 'Asia', 150),
-      new Pollution(1985, 'Europe', 80),
-    ];
-    var data3 = [
-      new Pollution(1985, 'USA', 200),
-      new Pollution(1980, 'Asia', 300),
-      new Pollution(1985, 'Europe', 180),
-    ];
+// Betroffenen Daten
+List<charts.Series<InjuredData, String>> _injuredData;
 
-    var piedata = [
-      new Task('Work', 35.8, Color(0xff3366cc)),
-      new Task('Eat', 8.3, Color(0xff990099)),
-      new Task('Commute', 10.8, Color(0xff109618)),
-      new Task('TV', 15.6, Color(0xfffdbe19)),
-      new Task('Sleep', 19.2, Color(0xffff9900)),
-      new Task('Other', 10.3, Color(0xffdc3912)),
+class Data{
+
+
+  Data() {
+    TimeSpentData();
+    AccidentType();
+    Involved();
+  }
+
+  void TimeSpentData(){
+    _timeSharing = List<charts.Series<Task, String>>();
+
+    var accidentTypes = [
+      new Task('Anfahrt', 12, Colors.blue),
+      new Task('Einsatz', 50, Colors.red),
+      new Task('Aufräumen', 45, Colors.green),
+      new Task('Schreibtisch', 32, Colors.grey),
     ];
 
-    var linesalesdata = [
-      new Sales(0, 45),
-      new Sales(1, 56),
-      new Sales(2, 55),
-      new Sales(3, 60),
-      new Sales(4, 61),
-      new Sales(5, 70),
-    ];
-    var linesalesdata1 = [
-      new Sales(0, 35),
-      new Sales(1, 46),
-      new Sales(2, 45),
-      new Sales(3, 50),
-      new Sales(4, 51),
-      new Sales(5, 60),
-    ];
-
-    var linesalesdata2 = [
-      new Sales(0, 20),
-      new Sales(1, 24),
-      new Sales(2, 25),
-      new Sales(3, 40),
-      new Sales(4, 45),
-      new Sales(5, 60),
-    ];
-
-    _seriesData.add(
-      charts.Series(
-        domainFn: (Pollution pollution, _) => pollution.place,
-        measureFn: (Pollution pollution, _) => pollution.quantity,
-        id: '2017',
-        data: data1,
-        fillPatternFn: (_, __) => charts.FillPatternType.solid,
-        fillColorFn: (Pollution pollution, _) =>
-            charts.ColorUtil.fromDartColor(Color(0xff990099)),
-      ),
-    );
-
-    _seriesData.add(
-      charts.Series(
-        domainFn: (Pollution pollution, _) => pollution.place,
-        measureFn: (Pollution pollution, _) => pollution.quantity,
-        id: '2018',
-        data: data2,
-        fillPatternFn: (_, __) => charts.FillPatternType.solid,
-        fillColorFn: (Pollution pollution, _) =>
-            charts.ColorUtil.fromDartColor(Color(0xff109618)),
-      ),
-    );
-
-    _seriesData.add(
-      charts.Series(
-        domainFn: (Pollution pollution, _) => pollution.place,
-        measureFn: (Pollution pollution, _) => pollution.quantity,
-        id: '2019',
-        data: data3,
-        fillPatternFn: (_, __) => charts.FillPatternType.solid,
-        fillColorFn: (Pollution pollution, _) =>
-            charts.ColorUtil.fromDartColor(Color(0xffff9900)),
-      ),
-    );
-
-    _seriesPieData.add(
+    _timeSharing.add(
       charts.Series(
         domainFn: (Task task, _) => task.task,
         measureFn: (Task task, _) => task.taskvalue,
         colorFn: (Task task, _) =>
             charts.ColorUtil.fromDartColor(task.colorval),
         id: 'Air Pollution',
-        data: piedata,
+        data: accidentTypes,
         labelAccessorFn: (Task row, _) => '${row.taskvalue}',
       ),
     );
+  }
 
-    _seriesLineData.add(
+  void AccidentType(){
+    _accidentLevel = List<charts.Series<Pollution, String>>();
+    _accidentType = List<charts.Series<Task, String>>();
+
+    accidentTypeDataFront = [48.0, 30.0, 61.0, 129.0, 246.0, 67.0];
+    var level1Data = [
+      new Pollution(1980, 'Brand', 80),
+      new Pollution(1980, 'Technisch', 21),
+      new Pollution(1980, 'Schadstoff', 10),
+    ];
+    var level2Data = [
+      new Pollution(1985, 'Brand', 200),
+      new Pollution(1980, 'Technisch', 150),
+      new Pollution(1985, 'Schadstoff', 80),
+    ];
+    var level3Data = [
+      new Pollution(1985, 'Brand', 30),
+      new Pollution(1980, 'Technisch', 300),
+      new Pollution(1985, 'Schadstoff', 180),
+    ];
+
+    var accidentTypes = [
+      new Task('Technischer Einsatz', 25, Colors.blue),
+      new Task('Brandeinsatz', 25, Colors.red),
+      new Task('Schadstoffeinsatz', 25, Colors.green),
+      new Task('Anderes', 25, Colors.grey),
+    ];
+
+    _accidentLevel.add(
       charts.Series(
-        colorFn: (__, _) => charts.ColorUtil.fromDartColor(Color(0xff990099)),
-        id: 'Air Pollution',
-        data: linesalesdata,
-        domainFn: (Sales sales, _) => sales.yearval,
-        measureFn: (Sales sales, _) => sales.salesval,
+        domainFn: (Pollution pollution, _) => pollution.place,
+        measureFn: (Pollution pollution, _) => pollution.quantity,
+        id: '1',
+        data: level1Data,
+        fillPatternFn: (_, __) => charts.FillPatternType.solid,
+        fillColorFn: (Pollution pollution, _) =>
+            charts.ColorUtil.fromDartColor(Colors.yellow),
       ),
     );
-    _seriesLineData.add(
+
+    _accidentLevel.add(
       charts.Series(
-        colorFn: (__, _) => charts.ColorUtil.fromDartColor(Color(0xff109618)),
-        id: 'Air Pollution',
-        data: linesalesdata1,
-        domainFn: (Sales sales, _) => sales.yearval,
-        measureFn: (Sales sales, _) => sales.salesval,
+        domainFn: (Pollution pollution, _) => pollution.place,
+        measureFn: (Pollution pollution, _) => pollution.quantity,
+        id: '2',
+        data: level2Data,
+        fillPatternFn: (_, __) => charts.FillPatternType.solid,
+        fillColorFn: (Pollution pollution, _) =>
+            charts.ColorUtil.fromDartColor(Colors.orange),
       ),
     );
-    _seriesLineData.add(
+
+    _accidentLevel.add(
       charts.Series(
-        colorFn: (__, _) => charts.ColorUtil.fromDartColor(Color(0xffff9900)),
-        id: 'Air Pollution',
-        data: linesalesdata2,
-        domainFn: (Sales sales, _) => sales.yearval,
-        measureFn: (Sales sales, _) => sales.salesval,
+        domainFn: (Pollution pollution, _) => pollution.place,
+        measureFn: (Pollution pollution, _) => pollution.quantity,
+        id: '3',
+        data: level3Data,
+        fillPatternFn: (_, __) => charts.FillPatternType.solid,
+        fillColorFn: (Pollution pollution, _) =>
+            charts.ColorUtil.fromDartColor(Colors.red),
+      ),
+    );
+
+    _accidentType.add(
+      charts.Series(
+        domainFn: (Task task, _) => task.task,
+        measureFn: (Task task, _) => task.taskvalue,
+        colorFn: (Task task, _) =>
+            charts.ColorUtil.fromDartColor(task.colorval),
+        id: 'accidentType',
+        data: accidentTypes,
+        labelAccessorFn: (Task row, _) => '${row.taskvalue}',
       ),
     );
   }
 
+  void Involved(){
+    _injuredData = List<charts.Series<InjuredData, String>>();
+
+    var injuredData = [
+      new InjuredData(2021, '14-Tagen', 0),
+      new InjuredData(2021, '10-Tagen', 6),
+      new InjuredData(2021, '8-Tagen', 2),
+      new InjuredData(2021, '5-Tagen', 1),
+      new InjuredData(2021, '2-Tagen', 4),
+    ];
+
+    _injuredData.add(
+      charts.Series(
+        domainFn: (InjuredData injuredData, _) => injuredData.place,
+        measureFn: (InjuredData injuredData, _) => injuredData.quantity,
+        id: 'injured',
+        data: injuredData,
+        fillPatternFn: (_, __) => charts.FillPatternType.solid,
+        fillColorFn: (InjuredData injuredData, _) =>
+            charts.ColorUtil.fromDartColor(Colors.blue),
+      ),
+    );
+  }
+}
+
+
+
+class ChartsPage extends StatefulWidget {
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _seriesData = List<charts.Series<Pollution, String>>();
-    _seriesPieData = List<charts.Series<Task, String>>();
-    _seriesLineData = List<charts.Series<Sales, int>>();
-    _generateData();
+  ChartsPageState createState() => ChartsPageState();
+  //_HomePageState createState() => _HomePageState();
+}
+
+class ChartsPageState extends State<ChartsPage> {
+
+  ChartsPageState(){
+    Data _data = new Data();
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  var data = [0.0, 1.0, 1.5, 2.0, 0.0, 0.0, -0.5, -1.0, -0.5, 0.0, 0.0];
+  var data = [48.0, 30.0, 61.0, 129.0, 246.0, 67.0];
   var data1 = [0.0,-2.0,3.5,-2.0,0.5,0.7,0.8,1.0,2.0,3.0,3.2];
 
   List<CircularStackEntry> circularData = <CircularStackEntry>[
     new CircularStackEntry(
       <CircularSegmentEntry>[
-        new CircularSegmentEntry(700.0, Color(0xff4285F4), rankKey: 'Q1'),
-        new CircularSegmentEntry(1000.0, Color(0xfff3af00), rankKey: 'Q2'),
-        new CircularSegmentEntry(1800.0, Color(0xffec3337), rankKey: 'Q3'),
-        new CircularSegmentEntry(1000.0, Color(0xff40b24b), rankKey: 'Q4'),
+        new CircularSegmentEntry(25, Colors.blue, rankKey: 'technisch'),
+        new CircularSegmentEntry(25, Colors.red, rankKey: 'brand'),
+        new CircularSegmentEntry(25, Colors.green, rankKey: 'schadstoff'),
+        new CircularSegmentEntry(25, Colors.grey, rankKey: 'anderes'),
       ],
       rankKey: 'Quarterly Profits',
     ),
@@ -378,7 +377,7 @@ class ChartsPageState extends State<ChartsPage> {
                       fillGradient: new LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [Colors.amber[800], Colors.amber[200]],
+                        colors: [Colors.blue, Colors.white],
                       ),
                     ),
                   ),
@@ -399,32 +398,16 @@ class ChartsPageState extends State<ChartsPage> {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 4,
+        length: 1,
         child: Scaffold(
           appBar: TabBar(
-            indicatorColor: Color(0xff9962D0),
+            indicatorColor: Colors.red,
             tabs: [
               Tab(icon: Icon(FontAwesomeIcons.circle)),
-              Tab(icon: Icon(FontAwesomeIcons.solidChartBar),),
-              Tab(icon: Icon(FontAwesomeIcons.chartPie)),
-              Tab(icon: Icon(FontAwesomeIcons.chartLine)),
             ],
           ),
           body: TabBarView(
@@ -436,17 +419,41 @@ class ChartsPageState extends State<ChartsPage> {
                   crossAxisSpacing: 12.0,
                   mainAxisSpacing: 12.0,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: mychart1Items("Sales by ","421.3M","+12.9% of target"),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => StartPage()),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        child: mychart1Items("Dauer","50","~Einsatzdauer"),
+                      ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: myCircularItems("Profits","68.7M"),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AccidentType()),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        child: myCircularItems("Einsatz","25%-Brand"),
+                      ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right:8.0),
-                      child: myTextItems("Mktg. Spend","48.6M"),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Injured()),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        child: myTextItems("Verletzte","~3"),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(right:8.0),
@@ -467,6 +474,158 @@ class ChartsPageState extends State<ChartsPage> {
                   ],
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class StartPage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+//ChartsPageState createState() => ChartsPageState();
+}
+
+
+class _HomePageState extends State<StartPage> {
+  List<charts.Series<Pollution, String>> _seriesData;
+  List<charts.Series<Task, String>> _seriesPieData;
+  List<charts.Series<Sales, int>> _seriesLineData;
+
+  _generateData() {
+    var data1 = [
+      new Pollution(1980, 'USA', 30),
+      new Pollution(1980, 'Asia', 40),
+      new Pollution(1980, 'Europe', 10),
+    ];
+    var data2 = [
+      new Pollution(1985, 'USA', 100),
+      new Pollution(1980, 'Asia', 150),
+      new Pollution(1985, 'Europe', 80),
+    ];
+    var data3 = [
+      new Pollution(1985, 'USA', 200),
+      new Pollution(1980, 'Asia', 300),
+      new Pollution(1985, 'Europe', 180),
+    ];
+
+    var piedata = [
+      new Task('Work', 35.8, Color(0xff3366cc)),
+      new Task('Eat', 8.3, Color(0xff990099)),
+      new Task('Commute', 10.8, Color(0xff109618)),
+      new Task('TV', 15.6, Color(0xfffdbe19)),
+      new Task('Sleep', 19.2, Color(0xffff9900)),
+      new Task('Other', 10.3, Color(0xffdc3912)),
+    ];
+
+    var linesalesdata = [
+      new Sales(0, 48),
+      new Sales(1, 30),
+      new Sales(2, 61),
+      new Sales(3, 129),
+      new Sales(4, 246),
+      new Sales(5, 67),
+    ];
+
+    _seriesData.add(
+      charts.Series(
+        domainFn: (Pollution pollution, _) => pollution.place,
+        measureFn: (Pollution pollution, _) => pollution.quantity,
+        id: '2017',
+        data: data1,
+        fillPatternFn: (_, __) => charts.FillPatternType.solid,
+        fillColorFn: (Pollution pollution, _) =>
+            charts.ColorUtil.fromDartColor(Color(0xff990099)),
+      ),
+    );
+
+    _seriesData.add(
+      charts.Series(
+        domainFn: (Pollution pollution, _) => pollution.place,
+        measureFn: (Pollution pollution, _) => pollution.quantity,
+        id: '2018',
+        data: data2,
+        fillPatternFn: (_, __) => charts.FillPatternType.solid,
+        fillColorFn: (Pollution pollution, _) =>
+            charts.ColorUtil.fromDartColor(Color(0xff109618)),
+      ),
+    );
+
+    _seriesData.add(
+      charts.Series(
+        domainFn: (Pollution pollution, _) => pollution.place,
+        measureFn: (Pollution pollution, _) => pollution.quantity,
+        id: '2019',
+        data: data3,
+        fillPatternFn: (_, __) => charts.FillPatternType.solid,
+        fillColorFn: (Pollution pollution, _) =>
+            charts.ColorUtil.fromDartColor(Color(0xffff9900)),
+      ),
+    );
+
+    _seriesPieData.add(
+      charts.Series(
+        domainFn: (Task task, _) => task.task,
+        measureFn: (Task task, _) => task.taskvalue,
+        colorFn: (Task task, _) =>
+            charts.ColorUtil.fromDartColor(task.colorval),
+        id: 'Air Pollution',
+        data: piedata,
+        labelAccessorFn: (Task row, _) => '${row.taskvalue}',
+      ),
+    );
+
+    _seriesLineData.add(
+      charts.Series(
+        colorFn: (__, _) => charts.ColorUtil.fromDartColor(Color(0xff990099)),
+        id: 'Air Pollution',
+        data: linesalesdata,
+        domainFn: (Sales sales, _) => sales.yearval,
+        measureFn: (Sales sales, _) => sales.salesval,
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _seriesData = List<charts.Series<Pollution, String>>();
+    _seriesPieData = List<charts.Series<Task, String>>();
+    _seriesLineData = List<charts.Series<Sales, int>>();
+    _generateData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.red,
+            //backgroundColor: Color(0xff308e1c),
+            bottom: TabBar(
+              indicatorColor: Colors.grey,
+              tabs: [
+                Tab(icon: Icon(FontAwesomeIcons.chartPie)),
+                Tab(icon: Icon(FontAwesomeIcons.chartLine)),
+                Tab(icon: Icon(FontAwesomeIcons.solidChartBar),),
+              ],
+            ),
+            title: Text('Dauer'),
+            leading: GestureDetector(
+              onTap: () { Navigator.pop(context); },
+              child: Icon(
+                Icons.arrow_back_rounded,  // add custom icons also
+              ),
+            ),
+          ),
+          body: TabBarView(
+            children: [
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Container(
@@ -474,14 +633,33 @@ class ChartsPageState extends State<ChartsPage> {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          'SO₂ emissions, by world region (in million tonnes)',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+                          'Zeitaufteilung',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+                        SizedBox(height: 10.0,),
                         Expanded(
-                          child: charts.BarChart(
-                            _seriesData,
-                            animate: true,
-                            barGroupingType: charts.BarGroupingType.grouped,
-                            //behaviors: [new charts.SeriesLegend()],
-                            animationDuration: Duration(seconds: 1),
+                          child: charts.PieChart(
+                              _timeSharing,
+                              animate: true,
+                              animationDuration: Duration(seconds: 1),
+                              behaviors: [
+                                new charts.DatumLegend(
+                                  outsideJustification: charts.OutsideJustification.endDrawArea,
+                                  horizontalFirst: false,
+                                  desiredMaxRows: 2,
+                                  cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
+                                  entryTextStyle: charts.TextStyleSpec(
+                                      color: charts.MaterialPalette.black,
+                                      fontSize: 18),
+                                )
+                              ],
+                              defaultRenderer: new charts.ArcRendererConfig(
+                                  arcWidth: 80,
+                                  startAngle: 4 / 5 * pi,
+                                  arcLength: 7 / 5 * pi,
+                                  arcRendererDecorators: [
+                                    new charts.ArcLabelDecorator(
+                                        labelPosition: charts.ArcLabelPosition.inside)
+                                  ]
+                              )
                           ),
                         ),
                       ],
@@ -496,31 +674,23 @@ class ChartsPageState extends State<ChartsPage> {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          'Time spent on daily tasks',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
-                        SizedBox(height: 10.0,),
+                          'Gesamteinsatzdauer der letzten Monate',style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold),),
                         Expanded(
-                          child: charts.PieChart(
-                              _seriesPieData,
+                          child: charts.LineChart(
+                              _seriesLineData,
+                              defaultRenderer: new charts.LineRendererConfig(
+                                  includeArea: false, stacked: true, includePoints: true),
                               animate: true,
                               animationDuration: Duration(seconds: 1),
                               behaviors: [
-                                new charts.DatumLegend(
-                                  outsideJustification: charts.OutsideJustification.endDrawArea,
-                                  horizontalFirst: false,
-                                  desiredMaxRows: 2,
-                                  cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
-                                  entryTextStyle: charts.TextStyleSpec(
-                                      color: charts.MaterialPalette.purple.shadeDefault,
-                                      fontFamily: 'Georgia',
-                                      fontSize: 11),
-                                )
-                              ],
-                              defaultRenderer: new charts.ArcRendererConfig(
-                                  arcWidth: 100,
-                                  arcRendererDecorators: [
-                                    new charts.ArcLabelDecorator(
-                                        labelPosition: charts.ArcLabelPosition.inside)
-                                  ])),
+                                new charts.ChartTitle('Monat',
+                                    behaviorPosition: charts.BehaviorPosition.bottom,
+                                    titleOutsideJustification:charts.OutsideJustification.middleDrawArea),
+                                new charts.ChartTitle('Dauer in min',
+                                    behaviorPosition: charts.BehaviorPosition.start,
+                                    titleOutsideJustification: charts.OutsideJustification.middleDrawArea)
+                              ]
+                          ),
                         ),
                       ],
                     ),
@@ -534,26 +704,14 @@ class ChartsPageState extends State<ChartsPage> {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          'Sales for the first 5 years',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+                          'Gesamteinsatzdauer der letzten Monate',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
                         Expanded(
-                          child: charts.LineChart(
-                              _seriesLineData,
-                              defaultRenderer: new charts.LineRendererConfig(
-                                  includeArea: true, stacked: true),
-                              animate: true,
-                              animationDuration: Duration(seconds: 1),
-                              behaviors: [
-                                new charts.ChartTitle('Years',
-                                    behaviorPosition: charts.BehaviorPosition.bottom,
-                                    titleOutsideJustification:charts.OutsideJustification.middleDrawArea),
-                                new charts.ChartTitle('Sales',
-                                    behaviorPosition: charts.BehaviorPosition.start,
-                                    titleOutsideJustification: charts.OutsideJustification.middleDrawArea),
-                                new charts.ChartTitle('Departments',
-                                  behaviorPosition: charts.BehaviorPosition.end,
-                                  titleOutsideJustification:charts.OutsideJustification.middleDrawArea,
-                                )
-                              ]
+                          child: charts.BarChart(
+                            _seriesData,
+                            animate: true,
+                            barGroupingType: charts.BarGroupingType.grouped,
+                            //behaviors: [new charts.SeriesLegend()],
+                            animationDuration: Duration(seconds: 1),
                           ),
                         ),
                       ],
@@ -590,4 +748,190 @@ class Sales {
   int salesval;
 
   Sales(this.yearval, this.salesval);
+}
+
+
+
+
+
+
+
+class AccidentType extends StatefulWidget {
+  @override
+  AccidentTypeState createState() => AccidentTypeState();
+//ChartsPageState createState() => ChartsPageState();
+}
+
+
+class AccidentTypeState extends State<AccidentType> {
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.red,
+            //backgroundColor: Color(0xff308e1c),
+            bottom: TabBar(
+              indicatorColor: Colors.grey,
+              tabs: [
+                Tab(icon: Icon(FontAwesomeIcons.chartPie)),
+                Tab(icon: Icon(FontAwesomeIcons.solidChartBar),),
+              ],
+            ),
+            title: Text('Einsatzdaten'),
+            leading: GestureDetector(
+              onTap: () { Navigator.pop(context); },
+              child: Icon(
+                Icons.arrow_back_rounded,  // add custom icons also
+              ),
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Container(
+                  child: Center(
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          'Unfallarten',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+                        SizedBox(height: 10.0,),
+                        Expanded(
+                          child: charts.PieChart(
+                              _accidentType,
+                              animate: true,
+                              animationDuration: Duration(seconds: 1),
+                              behaviors: [
+                                new charts.DatumLegend(
+                                  outsideJustification: charts.OutsideJustification.endDrawArea,
+                                  horizontalFirst: false,
+                                  desiredMaxRows: 2,
+                                  cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
+                                  entryTextStyle: charts.TextStyleSpec(
+                                      color: charts.MaterialPalette.purple.shadeDefault,
+                                      fontSize: 18),
+                                )
+                              ],
+                              defaultRenderer: new charts.ArcRendererConfig(
+                                  arcWidth: 100,
+                                  arcRendererDecorators: [
+                                    new charts.ArcLabelDecorator(
+                                        labelPosition: charts.ArcLabelPosition.inside)
+                                  ])),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Container(
+                  child: Center(
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          'Alarmstuffe 1-2-3',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+                        Expanded(
+                          child: charts.BarChart(
+                            _accidentLevel,
+                            animate: true,
+                            barGroupingType: charts.BarGroupingType.grouped,
+                            //behaviors: [new charts.SeriesLegend()],
+                            animationDuration: Duration(seconds: 1),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+class Injured extends StatefulWidget {
+  @override
+  InjuredState createState() => InjuredState();
+//ChartsPageState createState() => ChartsPageState();
+}
+
+
+class InjuredState extends State<Injured> {
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 1,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.red,
+            //backgroundColor: Color(0xff308e1c),
+            bottom: TabBar(
+              indicatorColor: Colors.grey,
+              tabs: [
+                Tab(icon: Icon(FontAwesomeIcons.solidChartBar),),
+              ],
+            ),
+            title: Text('Einsatzdaten'),
+            leading: GestureDetector(
+              onTap: () { Navigator.pop(context); },
+              child: Icon(
+                Icons.arrow_back_rounded,  // add custom icons also
+              ),
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Container(
+                  child: Center(
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          'Verletzte',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+                        Expanded(
+                          child: charts.BarChart(
+                            _injuredData,
+                            animate: true,
+                            //behaviors: [new charts.SeriesLegend()],
+                            animationDuration: Duration(seconds: 1),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class InjuredData {
+  String place;
+  int year;
+  int quantity;
+
+  InjuredData(this.year, this.place, this.quantity);
 }
