@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'adr.dart';
@@ -23,7 +22,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-Timer timer;
+late Timer timer;
 enum LoginStatus { notSignIn, signIn }
 enum Title { Info, Karte, Foto, Protokoll, Atemschutz, Abschluss }
 
@@ -50,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _keyboardVisible = false;
 
   LoginStatus _loginStatus = LoginStatus.notSignIn;
-  String email, password, feuerwehr;
+  String email="", password="", feuerwehr="";
   final _key = new GlobalKey<FormState>(),
       _keyT = new GlobalKey<FormState>(),
       _keyV = new GlobalKey<FormState>();
@@ -65,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
 
   checkPass() {
     final form = _keyV.currentState;
-    if (form.validate()) {
+    if (form!.validate()) {
       form.save();
       mailCheck();
     }
@@ -73,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
 
   check() {
     final form = _key.currentState;
-    if (form.validate()) {
+    if (form!.validate()) {
       form.save();
       login();
     }
@@ -81,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
 
   checkReg() {
     final form = _keyT.currentState;
-    if (form.validate()) {
+    if (form!.validate()) {
       form.save();
       save();
     }
@@ -105,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
     if (value == 1) {
       setState(() {
         final form = _keyV.currentState;
-        form.reset();
+        form!.reset();
       });
       print(message);
       loginToast(message);
@@ -190,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
         info();
         _pageState = 1;
         final form = _keyT.currentState;
-        form.reset();
+        form!.reset();
       });
       print(message);
       registerToast(message);
@@ -238,13 +237,6 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) {
-        setState(() {
-          _keyboardVisible = visible;
-        });
-      },
-    );
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     timer = Timer.periodic(
         Duration(seconds: 10), (Timer t) => infoState().getAPI());
@@ -350,14 +342,14 @@ class _LoginPageState extends State<LoginPage> {
                               elevation: 6.0,
                               child: TextFormField(
                                 validator: (e) {
-                                  if (e.isEmpty) {
+                                  if (e!.isEmpty) {
                                     return "Please Insert Email";
                                   } else if (EmailValidator.validate(e) ==
                                       false) {
                                     return "E-Mail muss dem Format (abc@def.ghi) entsprechen";
                                   }
                                 },
-                                onSaved: (e) => email = e,
+                                onSaved: (e) => email = e!,
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,
@@ -436,13 +428,13 @@ class _LoginPageState extends State<LoginPage> {
                           elevation: 6.0,
                           child: TextFormField(
                             validator: (e) {
-                              if (e.isEmpty) {
+                              if (e!.isEmpty) {
                                 return "Please Insert Email";
                               } else if (EmailValidator.validate(e) == false) {
                                 return "E-Mail muss dem Format (abc@def.ghi) entsprechen";
                               }
                             },
-                            onSaved: (e) => email = e,
+                            onSaved: (e) => email = e!,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -464,12 +456,12 @@ class _LoginPageState extends State<LoginPage> {
                           elevation: 6.0,
                           child: TextFormField(
                             validator: (e) {
-                              if (e.isEmpty) {
+                              if (e!.isEmpty) {
                                 return "Password can't be Empty";
                               }
                             },
                             obscureText: _secureText,
-                            onSaved: (e) => password = e,
+                            onSaved: (e) => password = e!,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -567,13 +559,13 @@ class _LoginPageState extends State<LoginPage> {
                           elevation: 6.0,
                           child: TextFormField(
                             validator: (e) {
-                              if (e.isEmpty) {
+                              if (e!.isEmpty) {
                                 return "Feuerwehr darf nicht leer sein";
                               } else if (validateFeuerwehr(e) == false) {
                                 return "Feuerwehr muss dem Format (FF Xyz) entsprechen";
                               }
                             },
-                            onSaved: (e) => feuerwehr = e,
+                            onSaved: (e) => feuerwehr = e!,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -595,13 +587,13 @@ class _LoginPageState extends State<LoginPage> {
                           elevation: 6.0,
                           child: TextFormField(
                             validator: (e) {
-                              if (e.isEmpty) {
+                              if (e!.isEmpty) {
                                 return "Please insert Email";
                               } else if (EmailValidator.validate(e) == false) {
                                 return "E-Mail muss dem Format (abc@def.ghi) entsprechen";
                               }
                             },
-                            onSaved: (e) => email = e,
+                            onSaved: (e) => email = e!,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -620,7 +612,7 @@ class _LoginPageState extends State<LoginPage> {
                           elevation: 6.0,
                           child: TextFormField(
                             obscureText: _secureText,
-                            onSaved: (e) => password = e,
+                            onSaved: (e) => password = e!,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -698,16 +690,16 @@ class MainMenuState extends State<MainMenu> {
     });
   }
 
-  Timer _timer;
+  late Timer _timer;
   String email = "", id = "", ff = "";
-  TabController tabController;
+  late TabController tabController;
 
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      id = preferences.getString("id");
-      email = preferences.getString("email");
-      ff = preferences.getString('ff');
+      id = preferences.getString("id")!;
+      email = preferences.getString("email")!;
+      ff = preferences.getString('ff')!;
     });
     print("ID: " + id);
     print("USER: " + email);
@@ -726,7 +718,7 @@ class MainMenuState extends State<MainMenu> {
   String _title = "Info";
   int pageIndex = 0;
   int initialIndex = 0;
-  final info _infoPage = info();
+  final info _info = info();
   final camera _cam = camera();
   final Protocol _protocol = Protocol();
   final Oxygen _oxygen = Oxygen();
@@ -735,10 +727,10 @@ class MainMenuState extends State<MainMenu> {
 
   Widget _showPage = new info();
 
-  Widget _pageChooser(int page) {
+  /*Widget _pageChooser(int page) {
     switch (page) {
       case 0:
-        return _infoPage;
+        return _info;
         break;
       case 1:
         /*final CurvedNavigationBarState navBarState = _bottomNavigationKey.currentState;
@@ -764,11 +756,11 @@ class MainMenuState extends State<MainMenu> {
           ),
         );
     }
-  }
+  }*/
 
   int _page = 0;
   GlobalKey _bottomNavigationKey = GlobalKey();
-  double lat, lng;
+  double lat=0, lng=0;
 
   void _setTitle(int index) {
     setState(() {
@@ -779,17 +771,44 @@ class MainMenuState extends State<MainMenu> {
     });
   }
 
+  List<Widget> pages = <Widget>[
+    info(),
+    map(),
+    camera(),
+    Protocol(),
+    Oxygen(),
+    adr()
+  ];
+
+  List<String> pageNames = <String>[
+    "Info",
+    "Karte",
+    "Kamera",
+    "Protokoll",
+    "Atemschutz",
+    "Gefahrgut"
+  ];
+
+  List<IconData> pageIcons = <IconData>[
+    Icons.info_rounded,
+    Icons.map_rounded,
+    Icons.local_see,
+    Icons.format_list_bulleted_rounded,
+    Icons.alarm_rounded,
+    Icons.warning_rounded,
+  ];
+
   @override
   Widget build(BuildContext context) {
     setState(() {
       infoState().getAPI();
     });
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-            drawer: Theme(
+      debugShowCheckedModeBanner: false,
+            home: Scaffold(
+              drawer: Theme(
                 data: Theme.of(context).copyWith(
-                  canvasColor: Colors.red[800].withOpacity(0.9),
+                  canvasColor: Colors.red[800]!.withOpacity(0.9),
                 ),
                 child: Drawer(
                     child: Stack(children: <Widget>[
@@ -799,8 +818,10 @@ class MainMenuState extends State<MainMenu> {
                         padding: EdgeInsets.zero,
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: AssetImage('assets/images/logo.png'),
-                                fit: BoxFit.scaleDown)),
+                                scale: 5,
+                                image: AssetImage(
+                                    'assets/images/Safer-Fire-Text_WHITE.png'),
+                                fit: BoxFit.none)),
                       ),
                     ),
                     ListTile(
@@ -815,8 +836,8 @@ class MainMenuState extends State<MainMenu> {
                         title: Text("Gefahrgut",
                             style: TextStyle(color: Colors.white)),
                         onTap: () {
-                          Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => _adr));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => _adr));
                         }),
                     ListTile(
                         leading: Icon(Icons.map_rounded, color: Colors.white),
@@ -830,50 +851,73 @@ class MainMenuState extends State<MainMenu> {
                         onTap: () {}),
                   ])
                 ]))),
-            backgroundColor: Colors.white10,
-            appBar: AppBar(
-              actions: [
-                IconButton(
-                    icon: Icon(Icons.logout),
-                    onPressed: () {
-                      signOut();
-                    }),
-              ],
-              centerTitle: true,
-              title: Text(
-                _title,
-                style: TextStyle(fontSize: 30),
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                actions: [
+                  IconButton(
+                      icon: Icon(Icons.logout),
+                      onPressed: () {
+                        signOut();
+                      }),
+                ],
+                title: Text(
+                  _title,
+                  style: TextStyle(fontSize: 20),
+                ),
+                backgroundColor: Color(0xffb32b19),
               ),
-              backgroundColor: Colors.red,
-            ),
-            bottomNavigationBar: CurvedNavigationBar(
-              key: _bottomNavigationKey,
-              index: pageIndex,
-              height: 50.0,
-              items: <Widget>[
-                Icon(Icons.info, size: 30),
-                Icon(Icons.map, size: 30),
-                Icon(Icons.local_see, size: 30),
-                Icon(Icons.format_list_bulleted, size: 30),
-                Icon(Icons.alarm, size: 30),
-              ],
-              color: Colors.white,
-              buttonBackgroundColor: Colors.white,
-              backgroundColor: Colors.transparent,
-              animationCurve: Curves.easeInOut,
-              animationDuration: Duration(milliseconds: 300),
-              onTap: (trappedIndex) {
-                setState(() {
-                  _setTitle(trappedIndex);
-                  _showPage = _pageChooser(trappedIndex);
-                });
-              },
-              letIndexChange: (index) => true,
-            ),
-            body: Container(
-              child: Center(
-                child: _showPage,
+              body: Container(
+                child: Column(
+                  children: [
+                    Flexible(
+                      child: StaggeredGridView.countBuilder(
+                        itemCount: pages.length,
+                        crossAxisCount: 4,
+                        itemBuilder: (BuildContext context, int index) => index == 0
+                            ? Container(
+                          margin: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              border:
+                              Border.all(width: 2, color: Color(0xffb32b19))),
+                          height: MediaQuery.of(context).size.height / 2,
+                          child: DrawerHeader(child: _info),
+                        )
+                            : new GestureDetector(
+                          child: Card(
+                            margin: EdgeInsets.all(5),
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    pageIcons[index],
+                                    color: Colors.black87,
+                                  ),
+                                  Text(
+                                    pageNames[index].toUpperCase(),
+                                    style: TextStyle(color: Colors.black87),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          onTap: () => {Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => pages[index]))},
+                        ),
+                        staggeredTileBuilder: (int index) => index == 0
+                            ? new StaggeredTile.count(4, 4)
+                            : new StaggeredTile.count(2, 1),
+                        mainAxisSpacing: 4.0,
+                        crossAxisSpacing: 4.0,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            )));
+            ));
   }
 }

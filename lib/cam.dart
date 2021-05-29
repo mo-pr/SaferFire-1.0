@@ -10,27 +10,32 @@ class camera extends StatefulWidget {
 List<File> images = <File>[];
 
 class _cameraState extends State<camera> {
-  File _image;
   final imagePicker = ImagePicker();
 
   Future getImage() async {
     final image = await imagePicker.getImage(source: ImageSource.camera);
     setState(() {
-      _image = File(image.path);
-      images.add(File(image.path));
+      images.add(File(image!.path));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(
+          "Kamera",
+          style: TextStyle(fontSize: 20),
+        ),
+        backgroundColor: Color(0xffb32b19),
+      ),
       body: Center(
         child: images.isEmpty == true
             ? Container(
                 child: Text(
                   "Keine Fotos vorhanden",
-                  style: TextStyle(color: Colors.white, fontSize: 28),
+                  style: TextStyle(color: Colors.black87, fontSize: 28),
                 ),
               )
             : ListView.builder(

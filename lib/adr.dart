@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:mysql1/mysql1.dart';
 
 class adr extends StatefulWidget {
@@ -8,8 +9,8 @@ class adr extends StatefulWidget {
 
 class _adrState extends State<adr> {
   TextEditingController teSeach = TextEditingController();
-  List<ADRobj> adrs = new List();
-  List<ADRobj> items = new List();
+  List<ADRobj> adrs = [];
+  List<ADRobj> items = [];
 
   @override
   void initState() {
@@ -20,20 +21,20 @@ class _adrState extends State<adr> {
   }
 
   Future getData() async {
-    /*final conn = await MySqlConnection.connect(new ConnectionSettings(
+    final conn = await MySqlConnection.connect(new ConnectionSettings(
       host: '192.168.0.8',
       port: 3306,
       user: 'MP_DEV',
       password: 'MP_DEV',
       db: 'saferfire',
-    ));*/
-    final conn = await MySqlConnection.connect(new ConnectionSettings(
+    ));
+    /*final conn = await MySqlConnection.connect(new ConnectionSettings(
       host: '86.56.241.47',
       port: 3306,
       user: 'MP_DEV',
       password: 'MP_DEV',
       db: 'saferfire',
-    ));
+    ));*/
     var result = await conn.query('select * from unnumbers');
     for (var row in result) {
       adrs.add(new ADRobj(
@@ -57,9 +58,9 @@ class _adrState extends State<adr> {
         builder: (BuildContext context) {
           return new AlertDialog(
               title: new Text("UN-Nummer: " +
-                  adrs.asMap()[index].unnr.padLeft(4, '0') +
+                  adrs.asMap()[index]!.unnr.padLeft(4, '0') +
                   "\n\n" +
-                  adrs.asMap()[index].bez),
+                  adrs.asMap()[index]!.bez),
               actions: <Widget>[
                 new FlatButton(
                     child: new Text('Abbrechen'),
@@ -72,7 +73,7 @@ class _adrState extends State<adr> {
 
   void filterSeach(String query) async {
     List<ADRobj> searchList = adrs;
-    List<ADRobj> dummySearch = new List();
+    List<ADRobj> dummySearch = [];
     if (query == "" || query == null || query == " ") {
       setState(() {
         items.clear();
@@ -94,14 +95,13 @@ class _adrState extends State<adr> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white10,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        centerTitle: true,
         title: Text(
           "Gefahrengut",
-          style: TextStyle(fontSize: 30),
+          style: TextStyle(fontSize: 20),
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xffb32b19),
       ),
       body: Column(
         children: <Widget>[
@@ -114,24 +114,24 @@ class _adrState extends State<adr> {
                   filterSeach(value);
                 });
               },
-              cursorColor: Colors.red,
+              cursorColor: Color(0xffb32b19),
               controller: teSeach,
               decoration: InputDecoration(
                 enabledBorder: new OutlineInputBorder(
                   borderRadius: new BorderRadius.circular(25.0),
-                  borderSide: BorderSide(color: Colors.red),
+                  borderSide: BorderSide(color: Color(0xffb32b19)),
                 ),
                 focusedBorder: new OutlineInputBorder(
                   borderRadius: new BorderRadius.circular(25.0),
-                  borderSide: BorderSide(color: Colors.red),
+                  borderSide: BorderSide(color: Color(0xffb32b19)),
                 ),
                 hintText: 'Search...',
-                hintStyle: TextStyle(color: Colors.white),
+                hintStyle: TextStyle(color: Colors.black87),
                 labelText: 'Search',
-                labelStyle: TextStyle(color: Colors.white),
+                labelStyle: TextStyle(color: Colors.black87),
                 prefixIcon: Icon(
                   Icons.search,
-                  color: Colors.red,
+                  color: Color(0xffb32b19),
                 ),
               ),
             ),
@@ -147,7 +147,7 @@ class _adrState extends State<adr> {
                       child: Container(
                           color: Colors.transparent,
                           child: Card(
-                            color: Colors.white10,
+                            color: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
@@ -162,7 +162,7 @@ class _adrState extends State<adr> {
                               title: Text(
                                 items[index].unnr.padLeft(4, '0'),
                                 style: TextStyle(
-                                    fontSize: 19.0, color: Colors.white),
+                                    fontSize: 19.0, color: Colors.black87),
                               ),
                             ),
                           )));

@@ -15,13 +15,20 @@ class _ProtocolState extends State<Protocol> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(
+          "Protokoll",
+          style: TextStyle(fontSize: 20),
+        ),
+        backgroundColor: Color(0xffb32b19),
+      ),
       body: Center(
         child: protocolEntries.isEmpty == true
             ? Container(
                 child: Text(
                   "Keine Einträge vorhanden",
-                  style: TextStyle(color: Colors.white, fontSize: 28),
+                  style: TextStyle(color: Colors.black87, fontSize: 28),
                 ),
               )
             : ListView.builder(
@@ -32,7 +39,7 @@ class _ProtocolState extends State<Protocol> {
                   return Container(
                       color: Colors.transparent,
                       child: Card(
-                        color: Colors.white10,
+                        color: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
@@ -49,7 +56,7 @@ class _ProtocolState extends State<Protocol> {
                           title: Text(
                             protocolEntries[index].getString(),
                             style:
-                                TextStyle(fontSize: 19.0, color: Colors.white),
+                                TextStyle(fontSize: 19.0, color: Colors.black87),
                           ),
                         ),
                       ));

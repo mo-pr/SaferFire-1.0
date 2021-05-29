@@ -18,11 +18,11 @@ class info extends StatefulWidget {
 
 var body, alarmBody, alarm;
 var num, time, stage, type, coords, subtype, feuerwehren, location, status;
-double _lat, _lng;
-int alarmAmount;
+double _lat = 0, _lng= 0;
+int alarmAmount = 0;
 
 class infoState extends State<info> {
-  Timer _timer;
+  late Timer _timer;
   void _readAPI() async {
     final res = await get(Uri.parse('https://intranet.ooelfv.at/webext2/rss/json_2tage.txt'));
     //final res = await get(Uri.parse('http://192.168.0.8/laufend.txt'));
@@ -34,6 +34,7 @@ class infoState extends State<info> {
 
   @override
   void initState() {
+    _readAPI();
     _timer = new Timer.periodic(new Duration(seconds: 3), (timer) {getAPI();});
     super.initState();
   }
@@ -46,13 +47,14 @@ class infoState extends State<info> {
 
   void getAPI() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    await _readAPI();
+    _readAPI();
     _lat = 0.0;
     _lng = 0.0;
+    String? ff = preferences.getString("ff");
     for (int i = 0; i < alarmAmount; i++) {
       if (alarmBody[i.toString()]
           .toString()
-          .contains(preferences.getString("ff"))) {
+          .contains(ff!)) {
         _lat = 0.0;
         _lng = 0.0;
         location = null;
@@ -66,33 +68,24 @@ class infoState extends State<info> {
         status = null;
         alarm = alarmBody[i.toString()]['einsatz'];
         num = alarm['num1'];
-        time = "\n" + alarm['startzeit'];
+        time = alarm['startzeit'];
         stage = alarm['alarmstufe'].toString();
         status = alarm['status'];
-        type = "\n" + alarm['einsatztyp']['text'];
+        type = alarm['einsatztyp']['text'];
         coords = "\n" +
             alarm['wgs84']['lat'].toString() +
             " " +
             alarm['wgs84']['lng'].toString();
         _lat = alarm['wgs84']['lat'];
         _lng = alarm['wgs84']['lng'];
-        subtype = "\n" + alarm['einsatzsubtyp']['text'];
+        subtype = alarm['einsatzsubtyp']['text'];
         feuerwehren = "(" + alarm['cntfeuerwehren'].toString() + ")";
         for (int i = 0; i < alarm['cntfeuerwehren']; i++) {
           feuerwehren +=
               "\n" + alarm['feuerwehrenarray'][i.toString()]['fwname'];
         }
-        location = "\nAdresse: " +
-            alarm['adresse']['default'] +
-            "\nOrt: " +
-            alarm['adresse']['earea'] +
-            " / " +
-            alarm['adresse']['emun'] +
-            "\nStraße: " +
-            alarm['adresse']['efeanme'] +
-            "\nHausnr.: " +
-            alarm['adresse']['estnum'].toString() +
-            "\nZusatz: " +
+        location = alarm['adresse']['default'] + "\n" +
+            alarm['adresse']['earea'] + "\nZusatz: " +
             alarm['adresse']['ecompl'];
         if (status.toString().contains('abgeschlossen')) {
           createPDF(num + ".pdf");
@@ -127,7 +120,7 @@ class infoState extends State<info> {
     final page = doc.pages.add();
     final pageTwo = oxygen != "" ? doc.pages.add() : null;
     final pageThree = protocol != "" ? doc.pages.add() : null;
-    PdfLayoutResult layoutResult = PdfTextElement(
+    PdfLayoutResult? layoutResult = PdfTextElement(
             text: num +
                 subtype +
                 type +
@@ -145,10 +138,10 @@ class infoState extends State<info> {
             format: PdfLayoutFormat(layoutType: PdfLayoutType.paginate));
     page.graphics.drawLine(
         PdfPen(PdfColor(255, 0, 0)),
-        Offset(0, layoutResult.bounds.bottom + 10),
+        Offset(0, layoutResult!.bounds.bottom + 10),
         Offset(page.getClientSize().width, layoutResult.bounds.bottom + 10));
     if (oxygen != "") {
-      PdfLayoutResult layoutResultTwo = PdfTextElement(
+      PdfLayoutResult? layoutResultTwo = PdfTextElement(
               text: oxygen,
               font: PdfStandardFont(PdfFontFamily.helvetica, 12),
               brush: PdfSolidBrush(PdfColor(0, 0, 0)))
@@ -157,14 +150,14 @@ class infoState extends State<info> {
               bounds: Rect.fromLTWH(0, 0, page.getClientSize().width,
                   page.getClientSize().height),
               format: PdfLayoutFormat(layoutType: PdfLayoutType.paginate));
-      pageTwo.graphics.drawLine(
+      pageTwo!.graphics.drawLine(
           PdfPen(PdfColor(255, 0, 0)),
-          Offset(0, layoutResultTwo.bounds.bottom + 10),
+          Offset(0, layoutResultTwo!.bounds.bottom + 10),
           Offset(pageTwo.getClientSize().width,
               layoutResultTwo.bounds.bottom + 10));
     }
     if (protocol != "") {
-      PdfLayoutResult layoutResultThree = PdfTextElement(
+      PdfLayoutResult? layoutResultThree = PdfTextElement(
               text: protocol,
               font: PdfStandardFont(PdfFontFamily.helvetica, 12),
               brush: PdfSolidBrush(PdfColor(0, 0, 0)))
@@ -173,15 +166,15 @@ class infoState extends State<info> {
               bounds: Rect.fromLTWH(0, 0, page.getClientSize().width,
                   page.getClientSize().height),
               format: PdfLayoutFormat(layoutType: PdfLayoutType.paginate));
-      pageThree.graphics.drawLine(
+      pageThree!.graphics.drawLine(
           PdfPen(PdfColor(255, 0, 0)),
-          Offset(0, layoutResultThree.bounds.bottom + 10),
+          Offset(0, layoutResultThree!.bounds.bottom + 10),
           Offset(pageThree.getClientSize().width,
               layoutResultThree.bounds.bottom + 10));
     }
     List<int> bytes = doc.save();
     doc.dispose();
-    final path = (await getExternalStorageDirectory()).path;
+    final path = (await getExternalStorageDirectory())!.path;
     final file = File('$path/$name');
     await file.writeAsBytes(bytes, flush: true);
     OpenFile.open('$path/$name');
@@ -211,46 +204,48 @@ class infoState extends State<info> {
             child: Container(
               child: Text(
                 "Zur Zeit liegt kein Alarm vor",
-                style: TextStyle(color: Colors.white, fontSize: 28),
+                style: TextStyle(color: Colors.black87, fontSize: 28),
                 textAlign: TextAlign.center,
               ),
             ),
           )
         : Container(
-            width: double.infinity,
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: ListView(
               children: [
                 Text(
-                  "Einsatztyp:${subtype != null ? subtype : ""}\n",
-                  style: TextStyle(color: Colors.white70, fontSize: 19),
+                  "${subtype != null ? subtype + " (Stufe: ${stage != null ?stage:""})": ""}\n",
+                  style: TextStyle(color: Colors.black87, fontSize: 19),
                   textAlign: TextAlign.left,
                 ),
-                Text(
-                  "Einsatzart:${type != null ? type : ""}\n",
-                  style: TextStyle(color: Colors.white70, fontSize: 19),
-                  textAlign: TextAlign.left,
+                Row(
+                  children: [
+                    Icon(Icons.location_pin,size: 35,),
+                    SizedBox(width: 10,),
+                    Text(
+                      "${location != null ? location : ""}\n",
+                      style: TextStyle(color: Colors.black87, fontSize: 14),
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
                 ),
-                Text(
-                  "Einsatzort: ${location != null ? location : ""}\n",
-                  style: TextStyle(color: Colors.white70, fontSize: 18),
-                  textAlign: TextAlign.left,
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Icon(Icons.access_time,size: 35,),
+                    SizedBox(width: 10,),
+                    Text(
+                      "${time != null ? time : ""}\n",
+                      style: TextStyle(color: Colors.black87, fontSize: 16),
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
                 ),
-                Text(
-                  "Alarmstufe: ${stage != null ? stage : ""}\n",
-                  style: TextStyle(color: Colors.white70, fontSize: 18),
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  "Alarmzeit:${time != null ? time : ""}\n",
-                  style: TextStyle(color: Colors.white70, fontSize: 17),
-                  textAlign: TextAlign.left,
-                ),
+                SizedBox(height: 20),
                 Text(
                   "Feuerwehren: ${feuerwehren != null ? feuerwehren : ""}\n",
-                  style: TextStyle(color: Colors.white70, fontSize: 19),
+                  style: TextStyle(color: Colors.black87, fontSize: 17),
                   textAlign: TextAlign.left,
                 ),
               ],
