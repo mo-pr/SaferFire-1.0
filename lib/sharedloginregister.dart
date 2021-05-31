@@ -712,11 +712,13 @@ class MainMenuState extends State<MainMenu> {
     super.initState();
     getPref();
     new Timer.periodic(new Duration(seconds: 3), (timer) {
-      infoState().getAPI();
+      setState(() {
+        infoState().getAPI();
+      });
     });
   }
 
-  String _title = "Info";
+  String _title = "Dashboard";
   int pageIndex = 0;
   int initialIndex = 0;
   final info _info = info();
@@ -733,8 +735,7 @@ class MainMenuState extends State<MainMenu> {
     setState(() {
       lat = infoState().getlat();
       lng = infoState().getlng();
-      var temp = Title.values[index].toString().split('.');
-      _title = temp[1];
+      _title = pageNames[index];
     });
   }
 
@@ -748,12 +749,12 @@ class MainMenuState extends State<MainMenu> {
   ];
 
   List<String> pageNames = <String>[
-    "Info",
+    "Dashboard",
     "Karte",
     "Kamera",
     "Protokoll",
     "Atemschutz",
-    /*"Rettungskarte",*/
+    "Rettungskarte",
     "Gefahrgut",
     "Wasserkarte",
     "Statistik"
@@ -767,7 +768,7 @@ class MainMenuState extends State<MainMenu> {
     Icons.alarm_rounded,
     Icons.directions_car,
     Icons.warning_rounded,
-    Icons.map_rounded,
+    Icons.waves_rounded,
     Icons.poll_rounded
   ];
 
@@ -776,12 +777,16 @@ class MainMenuState extends State<MainMenu> {
       isExpanded = !isExpanded;
     });
   }
-
+  void changeIndex(int index){
+    setState(() {
+      _setTitle(index);
+      _index = index;
+    });
+  }
+  
+  int _index = 0;
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      infoState().getAPI();
-    });
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -831,67 +836,112 @@ class MainMenuState extends State<MainMenu> {
                   Flexible(
                     child:
                     ListView(padding: EdgeInsets.zero, children: <Widget>[
-                      ListTile(
-                          leading:
-                          Icon(Icons.map_rounded, color: Colors.black87),
-                          title: Text("Karte",
-                              style: TextStyle(color: Colors.black87,fontSize: 15)),
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => _map));
-                          }),
-                      ListTile(
-                          leading:
-                          Icon(Icons.local_see, color: Colors.black87),
-                          title: Text("Kamera",
-                              style: TextStyle(color: Colors.black87,fontSize: 15)),
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => _cam));
-                          }),
-                      ListTile(
-                          leading:
-                          Icon(Icons.format_list_bulleted_rounded, color: Colors.black87),
-                          title: Text("Protokoll",
-                              style: TextStyle(color: Colors.black87,fontSize: 15)),
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => _protocol));
-                          }),
-                      ListTile(
-                          leading:
-                          Icon(Icons.alarm_rounded, color: Colors.black87),
-                          title: Text("Atemschutz",
-                              style: TextStyle(color: Colors.black87,fontSize: 15)),
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => _oxygen));
-                          }),
-                      ListTile(
-                          leading:
-                          Icon(Icons.directions_car, color: Colors.black87),
-                          title: Text("Rettungskarte",
-                              style: TextStyle(color: Colors.black87,fontSize: 15)),
-                          onTap: () {}),
-                      ListTile(
-                          leading:
-                          Icon(Icons.warning_rounded, color: Colors.black87),
-                          title: Text("Gefahrgut",
-                              style: TextStyle(color: Colors.black87,fontSize: 15)),
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => _adr));
-                          }),
-                      ListTile(
-                          leading: Icon(Icons.map_rounded, color: Colors.black87),
-                          title: Text("Wasserkarte",
-                              style: TextStyle(color: Colors.black87,fontSize: 15)),
-                          onTap: () {}),
-                      ListTile(
-                          leading: Icon(Icons.poll_rounded, color: Colors.black87),
-                          title: Text("Statistik",
-                              style: TextStyle(color: Colors.black87,fontSize: 15)),
-                          onTap: () {}),
+                      Container(
+                        color: _index == 0? Colors.black12:Colors.white,
+                        child: ListTile(
+                            leading:
+                            Icon(Icons.dashboard_rounded, color: Colors.black87),
+                            title: Text("Dashboard",
+                                style: TextStyle(color: Colors.black87,fontSize: 15)),
+                            onTap: () {
+                              changeIndex(0);
+                              toggleDrawer();
+                            }),
+                      ),
+                      Container(
+                        color: _index == 1? Colors.black12:Colors.white,
+                        child: ListTile(
+                            leading:
+                            Icon(Icons.map_rounded, color: Colors.black87),
+                            title: Text("Karte",
+                                style: TextStyle(color: Colors.black87,fontSize: 15)),
+                            onTap: () {
+                              changeIndex(1);
+                              toggleDrawer();
+                            }),
+                      ),
+                      Container(
+                        color: _index == 2? Colors.black12:Colors.white,
+                        child: ListTile(
+                            leading:
+                            Icon(Icons.local_see, color: Colors.black87),
+                            title: Text("Kamera",
+                                style: TextStyle(color: Colors.black87,fontSize: 15)),
+                            onTap: () {
+                              changeIndex(2);
+                              toggleDrawer();
+                            }),
+                      ),
+                      Container(
+                        color: _index == 3? Colors.black12:Colors.white,
+                        child: ListTile(
+                            leading:
+                            Icon(Icons.format_list_bulleted_rounded, color: Colors.black87),
+                            title: Text("Protokoll",
+                                style: TextStyle(color: Colors.black87,fontSize: 15)),
+                            onTap: () {
+                              changeIndex(3);
+                              toggleDrawer();
+                            }),
+                      ),
+                      Container(
+                        color: _index == 4? Colors.black12:Colors.white,
+                        child: ListTile(
+                            leading:
+                            Icon(Icons.alarm_rounded, color: Colors.black87),
+                            title: Text("Atemschutz",
+                                style: TextStyle(color: Colors.black87,fontSize: 15)),
+                            onTap: () {
+                              changeIndex(4);
+                              toggleDrawer();
+                            }),
+                      ),
+                      Container(
+                        color: _index == 5? Colors.black12:Colors.white,
+                        child: ListTile(
+                            leading:
+                            Icon(Icons.directions_car, color: Colors.black87),
+                            title: Text("Rettungskarte",
+                                style: TextStyle(color: Colors.black87,fontSize: 15)),
+                            onTap: () {
+                              changeIndex(5);
+                              toggleDrawer();
+                            }),
+                      ),
+                      Container(
+                        color: _index == 6? Colors.black12:Colors.white,
+                        child: ListTile(
+                            leading:
+                            Icon(Icons.warning_rounded, color: Colors.black87),
+                            title: Text("Gefahrgut",
+                                style: TextStyle(color: Colors.black87,fontSize: 15)),
+                            onTap: () {
+                              changeIndex(6);
+                              toggleDrawer();
+                            }),
+                      ),
+                      Container(
+                        color: _index == 7? Colors.black12:Colors.white,
+                        child: ListTile(
+                            leading: Icon(Icons.waves_rounded, color: Colors.black87),
+                            title: Text("Wasserkarte",
+                                style: TextStyle(color: Colors.black87,fontSize: 15)),
+                            onTap: () {
+                              changeIndex(7);
+                              toggleDrawer();
+                            }),
+                      ),
+                      Container(
+                        color: _index == 8? Colors.black12:Colors.white,
+                        child: ListTile(
+                            leading: Icon(Icons.poll_rounded, color: Colors.black87),
+                            title: Text("Statistik",
+                                style: TextStyle(color: Colors.black87,fontSize: 15)),
+                            onTap: () {
+                              changeIndex(8);
+                              toggleDrawer();
+                            }),
+                      ),
                     ]),
                   ),
                 ]),
@@ -918,51 +968,85 @@ class MainMenuState extends State<MainMenu> {
                   Flexible(
                     child:
                         ListView(padding: EdgeInsets.zero, children: <Widget>[
-                          ListTile(
-                              leading:
-                              Icon(Icons.map_rounded, color: Colors.black87),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => _map));
-                              }),
-                          ListTile(
-                              leading:
-                              Icon(Icons.local_see, color: Colors.black87),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => _cam));
-                              }),
-                          ListTile(
-                              leading:
-                              Icon(Icons.format_list_bulleted_rounded, color: Colors.black87),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => _protocol));
-                              }),
-                          ListTile(
-                              leading:
-                              Icon(Icons.alarm_rounded, color: Colors.black87),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => _oxygen));
-                              }),
-                          ListTile(
-                              leading:
-                              Icon(Icons.directions_car, color: Colors.black87),
-                              onTap: () {}),
-                          ListTile(
-                              leading:
-                              Icon(Icons.warning_rounded, color: Colors.black87),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => _adr));
-                              }),
-                          ListTile(
-                              leading: Icon(Icons.map_rounded, color: Colors.black87),
-                              onTap: () {}),
-                          ListTile(
-                              leading: Icon(Icons.poll_rounded, color: Colors.black87),
-                              onTap: () {}),
+                          Container(
+                            color: _index == 0? Colors.black12:Colors.white,
+                            child: ListTile(
+                                leading:
+                                Icon(Icons.dashboard_rounded, color: Colors.black87),
+                                onTap: () {
+                                  changeIndex(0);
+                                }),
+                          ),
+                          Container(
+                            color: _index == 1? Colors.black12:Colors.white,
+                            child: ListTile(
+                                leading:
+                                Icon(Icons.map_rounded, color: Colors.black87),
+                                onTap: () {
+                                  changeIndex(1);
+                                }),
+                          ),
+                          Container(
+                            color: _index == 2? Colors.black12:Colors.white,
+                            child: ListTile(
+                                leading:
+                                Icon(Icons.local_see, color: Colors.black87),
+                                onTap: () {
+                                  changeIndex(2);
+                                }),
+                          ),
+                          Container(
+                            color: _index == 3? Colors.black12:Colors.white,
+                            child: ListTile(
+                                leading:
+                                Icon(Icons.format_list_bulleted_rounded, color: Colors.black87),
+                                onTap: () {
+                                  changeIndex(3);
+                                }),
+                          ),
+                          Container(
+                            color: _index == 4? Colors.black12:Colors.white,
+                            child: ListTile(
+                                leading:
+                                Icon(Icons.alarm_rounded, color: Colors.black87),
+                                onTap: () {
+                                  changeIndex(4);
+                                }),
+                          ),
+                          Container(
+                            color: _index == 5? Colors.black12:Colors.white,
+                            child: ListTile(
+                                leading:
+                                Icon(Icons.directions_car, color: Colors.black87),
+                                onTap: () {
+                                  changeIndex(5);
+                                }),
+                          ),
+                          Container(
+                            color: _index == 6? Colors.black12:Colors.white,
+                            child: ListTile(
+                                leading:
+                                Icon(Icons.warning_rounded, color: Colors.black87),
+                                onTap: () {
+                                  changeIndex(6);
+                                }),
+                          ),
+                          Container(
+                            color: _index == 7? Colors.black12:Colors.white,
+                            child: ListTile(
+                                leading: Icon(Icons.waves_rounded, color: Colors.black87),
+                                onTap: () {
+                                  changeIndex(7);
+                                }),
+                          ),
+                          Container(
+                            color: _index == 8? Colors.black12:Colors.white,
+                            child: ListTile(
+                                leading: Icon(Icons.poll_rounded, color: Colors.black87),
+                                onTap: () {
+                                  changeIndex(8);
+                                }),
+                          ),
                     ]),
                   ),
                 ]),
@@ -971,6 +1055,7 @@ class MainMenuState extends State<MainMenu> {
                 width: isExpanded ? MediaQuery.of(context).size.width*0.55:MediaQuery.of(context).size.width*0.85,
                 child: Column(
                   children: [
+                    _index == 0?
                     Flexible(
                       child: StaggeredGridView.countBuilder(
                         itemCount: pages.length,
@@ -1041,7 +1126,7 @@ class MainMenuState extends State<MainMenu> {
                                             ),
                                             Text(
                                               pageNames[index].toUpperCase(),
-                                              style: TextStyle(
+                                              style: TextStyle(fontSize: isExpanded? 11:15,
                                                   color: Colors.black87),
                                             ),
                                           ],
@@ -1049,10 +1134,7 @@ class MainMenuState extends State<MainMenu> {
                                       ),
                                     ),
                                     onTap: () => {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  pages[index]))
+                                      changeIndex(index)
                                     },
                                   ),
                         staggeredTileBuilder: (int index) => index == 0
@@ -1061,7 +1143,23 @@ class MainMenuState extends State<MainMenu> {
                         mainAxisSpacing: 4.0,
                         crossAxisSpacing: 1.0,
                       ),
-                    ),
+                    ):Container(),
+                    _index == 1?
+                    Flexible(child: _map):Container(),
+                    _index == 2?
+                    Flexible(child: _cam):Container(),
+                    _index == 3?
+                    Flexible(child: _protocol):Container(),
+                    _index == 4?
+                    Flexible(child: _oxygen):Container(),
+                    _index == 5?
+                    Flexible(child: _oxygen):Container(),
+                    _index == 6?
+                    Flexible(child: _adr):Container(),
+                    _index == 7?
+                    Flexible(child: _oxygen):Container(),
+                    _index == 8?
+                    Flexible(child: _oxygen):Container(),
                   ],
                 ),
               ),

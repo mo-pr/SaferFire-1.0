@@ -15,14 +15,7 @@ class _ProtocolState extends State<Protocol> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          "Protokoll",
-          style: TextStyle(fontSize: 20),
-        ),
-        backgroundColor: Color(0xffb32b19),
-      ),
+      backgroundColor: Colors.transparent,
       body: Center(
         child: protocolEntries.isEmpty == true
             ? Container(
@@ -37,12 +30,27 @@ class _ProtocolState extends State<Protocol> {
                 itemCount: protocolEntries.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
-                      color: Colors.transparent,
-                      child: Card(
+                      decoration: BoxDecoration(
                         color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10)),
+                        boxShadow: [
+                          BoxShadow(
+                            color:
+                            Colors.grey.withOpacity(0.3),
+                            spreadRadius: 2,
+                            blurRadius: 2,
+                            offset: Offset(0,
+                                3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Card(
+                        color: Colors.transparent,
+                        shadowColor: Colors.transparent,
                         child: ListTile(
                           leading: CircleAvatar(
                             backgroundColor: Colors.transparent,

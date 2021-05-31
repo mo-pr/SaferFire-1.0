@@ -22,14 +22,14 @@ class _cameraState extends State<camera> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+      backgroundColor: Colors.transparent,
+      /*appBar: AppBar(
         title: Text(
           "Kamera",
           style: TextStyle(fontSize: 20),
         ),
         backgroundColor: Color(0xffb32b19),
-      ),
+      ),*/
       body: Center(
         child: images.isEmpty == true
             ? Container(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:mysql1/mysql1.dart';
 
 class adr extends StatefulWidget {
@@ -95,14 +94,7 @@ class _adrState extends State<adr> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          "Gefahrengut",
-          style: TextStyle(fontSize: 20),
-        ),
-        backgroundColor: Color(0xffb32b19),
-      ),
+      backgroundColor: Colors.transparent,
       body: Column(
         children: <Widget>[
           Padding(

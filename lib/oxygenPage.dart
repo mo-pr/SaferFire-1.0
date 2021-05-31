@@ -79,14 +79,7 @@ class _OxygenState extends State<Oxygen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          "Atemschutz",
-          style: TextStyle(fontSize: 20),
-        ),
-        backgroundColor: Color(0xffb32b19),
-      ),
+      backgroundColor: Colors.transparent,
       body: Center(
         child: entries.isEmpty == true
             ? Container(

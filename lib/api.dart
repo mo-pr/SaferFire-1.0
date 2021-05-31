@@ -23,7 +23,7 @@ int alarmAmount = 0;
 
 class infoState extends State<info> {
   late Timer _timer;
-  void _readAPI() async {
+  Future<void> _readAPI() async {
     final res = await get(Uri.parse('https://intranet.ooelfv.at/webext2/rss/json_2tage.txt'));
     //final res = await get(Uri.parse('http://192.168.0.8/laufend.txt'));
     //final res = await get(Uri.parse('http://86.56.241.47/laufend.txt'));
@@ -47,7 +47,7 @@ class infoState extends State<info> {
 
   void getAPI() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    _readAPI();
+    await _readAPI();
     _lat = 0.0;
     _lng = 0.0;
     String? ff = preferences.getString("ff");
@@ -69,6 +69,7 @@ class infoState extends State<info> {
         alarm = alarmBody[i.toString()]['einsatz'];
         num = alarm['num1'];
         time = alarm['startzeit'];
+        time = time.toString().substring(0,time.toString().length-5);
         stage = alarm['alarmstufe'].toString();
         status = alarm['status'];
         type = alarm['einsatztyp']['text'];
@@ -87,6 +88,9 @@ class infoState extends State<info> {
         location = alarm['adresse']['default'] + "\n" +
             alarm['adresse']['earea'] + "\nZusatz: " +
             alarm['adresse']['ecompl'];
+        setState(() {
+
+        });
         if (status.toString().contains('abgeschlossen')) {
           createPDF(num + ".pdf");
           _lat = 0.0;
@@ -211,7 +215,6 @@ class infoState extends State<info> {
           )
         : Container(
             alignment: Alignment.centerLeft,
-            padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
             child: ListView(
               children: [
                 Text(
@@ -221,7 +224,7 @@ class infoState extends State<info> {
                 ),
                 Row(
                   children: [
-                    Icon(Icons.location_pin,size: 35,),
+                    Icon(Icons.location_pin,size: 30,),
                     SizedBox(width: 10,),
                     Text(
                       "${location != null ? location : ""}\n",
@@ -233,11 +236,11 @@ class infoState extends State<info> {
                 SizedBox(height: 20),
                 Row(
                   children: [
-                    Icon(Icons.access_time,size: 35,),
+                    Icon(Icons.access_time,size: 30,),
                     SizedBox(width: 10,),
                     Text(
                       "${time != null ? time : ""}\n",
-                      style: TextStyle(color: Colors.black87, fontSize: 16),
+                      style: TextStyle(color: Colors.black87, fontSize: 15),
                       textAlign: TextAlign.left,
                     ),
                   ],

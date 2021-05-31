@@ -37,14 +37,7 @@ class _mapState extends State<map> {
     if (lat != null && lng != null && lat != 0 && lng != 0) {
       loadMap();
       return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(
-            "Karte",
-            style: TextStyle(fontSize: 20),
-          ),
-          backgroundColor: Color(0xffb32b19),
-        ),
+        backgroundColor: Colors.transparent,
         body: Center(
           child: Text(
             "Es liegt ein Alarm vor",
@@ -55,14 +48,7 @@ class _mapState extends State<map> {
       );
     } else {
       return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(
-            "Karte",
-            style: TextStyle(fontSize: 20),
-          ),
-          backgroundColor: Color(0xffb32b19),
-        ),
+        backgroundColor: Colors.transparent,
         body: Center(
           child: Text(
             "Zur Zeit liegt kein Alarm vor",
