@@ -393,7 +393,45 @@ class ChartsPageState extends State<ChartsPage> {
 
 
 
+  Material deploymentsItem(String title, String subtitle){
+    return Material(
+      color: Colors.white,
+      elevation: 14.0,
+      borderRadius: BorderRadius.circular(8.0),
+      shadowColor: Color(0x802196F3),
+      child: Center(
+        child:Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment:MainAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                mainAxisAlignment:MainAxisAlignment.center,
+                children: <Widget>[
 
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child:Text(title,style:TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.blueAccent,
+                    ),),
+                  ),
+
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child:Text(subtitle,style:TextStyle(
+                      fontSize: 30.0,
+                    ),),
+                  ),
+
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
 
 
@@ -402,16 +440,91 @@ class ChartsPageState extends State<ChartsPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 1,
+        length: 2,
         child: Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: TabBar(
             indicatorColor: Colors.red,
             tabs: [
-              Tab(icon: Icon(FontAwesomeIcons.circle)),
+              Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Text('Einsätze',
+                      style: TextStyle(fontSize: 18))),
+              Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Text('Daten',
+                      style: TextStyle(fontSize: 18))),
             ],
           ),
           body: TabBarView(
             children: [
+              Padding(
+                padding: EdgeInsets.all(6.0),
+                child: StaggeredGridView.count(
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 0.2,
+                  mainAxisSpacing: 0.2,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => DeploymentsPage("Linz","FF-Gründberg","Autounfall","12:45")),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        child: deploymentsItem("gestern","20 min"),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => DeploymentsPage("Zwettl an der Rodl","FF-Zwettl, FF-Badleonfleden","Brand","16:15")),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        child: deploymentsItem("vor 2 Tagen","48 min"),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => DeploymentsPage("Wels","FF-Traun","Sturz","8:20")),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        child: deploymentsItem("vor 3 Tagen","45 min"),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: deploymentsItem("vor 5 Tagen","112 min"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: deploymentsItem("vor 8 Tagen", "34 min"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: deploymentsItem("vor 12 Tagen", "219 min"),
+                    ),
+
+                  ],
+                  staggeredTiles: [
+                    StaggeredTile.extent(4, 120.0),
+                    StaggeredTile.extent(2, 120.0),
+                    StaggeredTile.extent(2, 120.0),
+                    StaggeredTile.extent(2, 120.0),
+                    StaggeredTile.extent(2, 120.0),
+                    StaggeredTile.extent(2, 120.0),
+                  ],
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: StaggeredGridView.count(
@@ -476,6 +589,49 @@ class ChartsPageState extends State<ChartsPage> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class DeploymentsPage extends StatelessWidget {
+
+  String _location = null;
+  String _feuerwehren = null;
+  String _subtype = null;
+  String _coords = null;
+  String _type = null;
+  String _stage = null;
+  String _time = null;
+
+  DeploymentsPage(String location, String feuerwehren, String type, String time){
+    _location = location;
+    _feuerwehren = feuerwehren;
+    _type = type;
+    _time = time;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.red,
+        title: Text("Second Route"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Center(
+              child:  Text('Einsatz', textAlign: TextAlign.center, style: TextStyle(fontSize: 36,),),
+            ),
+            Text('ID: 12345', style: TextStyle(fontSize: 20),),
+            Text('Location: ' + _location, style: TextStyle(fontSize: 20),),
+            Text('Feuerwehren: ' + _feuerwehren, style: TextStyle(fontSize: 20),),
+            Text('Einsatzart: ' + _type, style: TextStyle(fontSize: 20),),
+            Text('Zeit: ' + _time, style: TextStyle(fontSize: 20),),
+          ],
         ),
       ),
     );
