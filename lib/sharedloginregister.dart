@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _keyboardVisible = false;
 
   LoginStatus _loginStatus = LoginStatus.notSignIn;
-  String email="", password="", feuerwehr="";
+  String email = "", password = "", feuerwehr = "";
   final _key = new GlobalKey<FormState>(),
       _keyT = new GlobalKey<FormState>(),
       _keyV = new GlobalKey<FormState>();
@@ -725,42 +726,8 @@ class MainMenuState extends State<MainMenu> {
   final map _map = map();
   final adr _adr = adr();
 
-  Widget _showPage = new info();
-
-  /*Widget _pageChooser(int page) {
-    switch (page) {
-      case 0:
-        return _info;
-        break;
-      case 1:
-        /*final CurvedNavigationBarState navBarState = _bottomNavigationKey.currentState;
-        navBarState.setPage(0);*/
-        return _map;
-        break;
-      case 2:
-        return _cam;
-        break;
-      case 3:
-        return _protocol;
-        break;
-      case 4:
-        return _oxygen;
-        break;
-      default:
-        new Container(
-          child: new Center(
-            child: new Text(
-              "Error: No Page found",
-              style: new TextStyle(fontSize: 30),
-            ),
-          ),
-        );
-    }
-  }*/
-
-  int _page = 0;
-  GlobalKey _bottomNavigationKey = GlobalKey();
-  double lat=0, lng=0;
+  bool isExpanded = false;
+  double lat = 0, lng = 0;
 
   void _setTitle(int index) {
     setState(() {
@@ -786,7 +753,10 @@ class MainMenuState extends State<MainMenu> {
     "Kamera",
     "Protokoll",
     "Atemschutz",
-    "Gefahrgut"
+    /*"Rettungskarte",*/
+    "Gefahrgut",
+    "Wasserkarte",
+    "Statistik"
   ];
 
   List<IconData> pageIcons = <IconData>[
@@ -795,8 +765,17 @@ class MainMenuState extends State<MainMenu> {
     Icons.local_see,
     Icons.format_list_bulleted_rounded,
     Icons.alarm_rounded,
+    Icons.directions_car,
     Icons.warning_rounded,
+    Icons.map_rounded,
+    Icons.poll_rounded
   ];
+
+  void toggleDrawer(){
+    setState(() {
+      isExpanded = !isExpanded;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -804,120 +783,290 @@ class MainMenuState extends State<MainMenu> {
       infoState().getAPI();
     });
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-            home: Scaffold(
-              drawer: Theme(
-                data: Theme.of(context).copyWith(
-                  canvasColor: Colors.red[800]!.withOpacity(0.9),
-                ),
-                child: Drawer(
-                    child: Stack(children: <Widget>[
-                  ListView(padding: EdgeInsets.zero, children: <Widget>[
-                    DrawerHeader(
-                      child: Container(
-                        padding: EdgeInsets.zero,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                scale: 5,
-                                image: AssetImage(
-                                    'assets/images/Safer-Fire-Text_WHITE.png'),
-                                fit: BoxFit.none)),
-                      ),
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () => {
+                toggleDrawer()
+              },
+            ),
+            actions: [
+              IconButton(
+                  icon: Icon(Icons.logout),
+                  onPressed: () {
+                    signOut();
+                  }),
+            ],
+            title: Text(
+              _title,
+              style: TextStyle(fontSize: 20),
+            ),
+            backgroundColor: Color(0xffb32b19),
+          ),
+          body: Row(
+            children: [
+              isExpanded ?
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 2,
+                      blurRadius: 2,
+                      offset: Offset(0, 3), // changes position of shadow
                     ),
-                    ListTile(
-                        leading:
-                            Icon(Icons.directions_car, color: Colors.white),
-                        title: Text("Rettungskarte",
-                            style: TextStyle(color: Colors.white)),
-                        onTap: () {}),
-                    ListTile(
-                        leading:
-                            Icon(Icons.warning_rounded, color: Colors.white),
-                        title: Text("Gefahrgut",
-                            style: TextStyle(color: Colors.white)),
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => _adr));
-                        }),
-                    ListTile(
-                        leading: Icon(Icons.map_rounded, color: Colors.white),
-                        title: Text("Wasserkarte",
-                            style: TextStyle(color: Colors.white)),
-                        onTap: () {}),
-                    ListTile(
-                        leading: Icon(Icons.poll_rounded, color: Colors.white),
-                        title: Text("Statistik",
-                            style: TextStyle(color: Colors.white)),
-                        onTap: () {}),
-                  ])
-                ]))),
-              backgroundColor: Colors.white,
-              appBar: AppBar(
-                actions: [
-                  IconButton(
-                      icon: Icon(Icons.logout),
-                      onPressed: () {
-                        signOut();
-                      }),
-                ],
-                title: Text(
-                  _title,
-                  style: TextStyle(fontSize: 20),
+                  ],
                 ),
-                backgroundColor: Color(0xffb32b19),
+                width: MediaQuery.of(context).size.width*0.45,
+                child: Column(children: [
+                  Flexible(
+                    child:
+                    ListView(padding: EdgeInsets.zero, children: <Widget>[
+                      ListTile(
+                          leading:
+                          Icon(Icons.map_rounded, color: Colors.black87),
+                          title: Text("Karte",
+                              style: TextStyle(color: Colors.black87,fontSize: 15)),
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => _map));
+                          }),
+                      ListTile(
+                          leading:
+                          Icon(Icons.local_see, color: Colors.black87),
+                          title: Text("Kamera",
+                              style: TextStyle(color: Colors.black87,fontSize: 15)),
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => _cam));
+                          }),
+                      ListTile(
+                          leading:
+                          Icon(Icons.format_list_bulleted_rounded, color: Colors.black87),
+                          title: Text("Protokoll",
+                              style: TextStyle(color: Colors.black87,fontSize: 15)),
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => _protocol));
+                          }),
+                      ListTile(
+                          leading:
+                          Icon(Icons.alarm_rounded, color: Colors.black87),
+                          title: Text("Atemschutz",
+                              style: TextStyle(color: Colors.black87,fontSize: 15)),
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => _oxygen));
+                          }),
+                      ListTile(
+                          leading:
+                          Icon(Icons.directions_car, color: Colors.black87),
+                          title: Text("Rettungskarte",
+                              style: TextStyle(color: Colors.black87,fontSize: 15)),
+                          onTap: () {}),
+                      ListTile(
+                          leading:
+                          Icon(Icons.warning_rounded, color: Colors.black87),
+                          title: Text("Gefahrgut",
+                              style: TextStyle(color: Colors.black87,fontSize: 15)),
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => _adr));
+                          }),
+                      ListTile(
+                          leading: Icon(Icons.map_rounded, color: Colors.black87),
+                          title: Text("Wasserkarte",
+                              style: TextStyle(color: Colors.black87,fontSize: 15)),
+                          onTap: () {}),
+                      ListTile(
+                          leading: Icon(Icons.poll_rounded, color: Colors.black87),
+                          title: Text("Statistik",
+                              style: TextStyle(color: Colors.black87,fontSize: 15)),
+                          onTap: () {}),
+                    ]),
+                  ),
+                ]),
+              )
+              :Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 2,
+                      blurRadius: 2,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
+                width: MediaQuery.of(context).size.width*0.15,
+                child: Column(children: [
+                  Flexible(
+                    child:
+                        ListView(padding: EdgeInsets.zero, children: <Widget>[
+                          ListTile(
+                              leading:
+                              Icon(Icons.map_rounded, color: Colors.black87),
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => _map));
+                              }),
+                          ListTile(
+                              leading:
+                              Icon(Icons.local_see, color: Colors.black87),
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => _cam));
+                              }),
+                          ListTile(
+                              leading:
+                              Icon(Icons.format_list_bulleted_rounded, color: Colors.black87),
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => _protocol));
+                              }),
+                          ListTile(
+                              leading:
+                              Icon(Icons.alarm_rounded, color: Colors.black87),
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => _oxygen));
+                              }),
+                          ListTile(
+                              leading:
+                              Icon(Icons.directions_car, color: Colors.black87),
+                              onTap: () {}),
+                          ListTile(
+                              leading:
+                              Icon(Icons.warning_rounded, color: Colors.black87),
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => _adr));
+                              }),
+                          ListTile(
+                              leading: Icon(Icons.map_rounded, color: Colors.black87),
+                              onTap: () {}),
+                          ListTile(
+                              leading: Icon(Icons.poll_rounded, color: Colors.black87),
+                              onTap: () {}),
+                    ]),
+                  ),
+                ]),
               ),
-              body: Container(
+              Container(
+                width: isExpanded ? MediaQuery.of(context).size.width*0.55:MediaQuery.of(context).size.width*0.85,
                 child: Column(
                   children: [
                     Flexible(
                       child: StaggeredGridView.countBuilder(
                         itemCount: pages.length,
                         crossAxisCount: 4,
-                        itemBuilder: (BuildContext context, int index) => index == 0
-                            ? Container(
-                          margin: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              border:
-                              Border.all(width: 2, color: Color(0xffb32b19))),
-                          height: MediaQuery.of(context).size.height / 2,
-                          child: DrawerHeader(child: _info),
-                        )
-                            : new GestureDetector(
-                          child: Card(
-                            margin: EdgeInsets.all(5),
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    pageIcons[index],
-                                    color: Colors.black87,
+                        itemBuilder: (BuildContext context, int index) =>
+                            index == 0
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          width: 2,
+                                          color: Color(0xffb32b19)),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10),
+                                          bottomLeft: Radius.circular(10),
+                                          bottomRight: Radius.circular(10),
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.6),
+                                          spreadRadius: 2,
+                                          blurRadius: 2,
+                                          offset: Offset(0,
+                                              3), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
+                                    margin: EdgeInsets.all(5),
+                                    height:
+                                        MediaQuery.of(context).size.height / 2,
+                                    child: DrawerHeader(child: _info),
+                                  )
+                                : new GestureDetector(
+                                    child: Card(
+                                      margin: EdgeInsets.all(5),
+                                      color: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10),
+                                              bottomLeft: Radius.circular(10),
+                                              bottomRight: Radius.circular(10)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(0.3),
+                                              spreadRadius: 2,
+                                              blurRadius: 2,
+                                              offset: Offset(0,
+                                                  3), // changes position of shadow
+                                            ),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              pageIcons[index],
+                                              color: Colors.black87,
+                                            ),
+                                            Text(
+                                              pageNames[index].toUpperCase(),
+                                              style: TextStyle(
+                                                  color: Colors.black87),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    onTap: () => {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  pages[index]))
+                                    },
                                   ),
-                                  Text(
-                                    pageNames[index].toUpperCase(),
-                                    style: TextStyle(color: Colors.black87),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          onTap: () => {Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => pages[index]))},
-                        ),
                         staggeredTileBuilder: (int index) => index == 0
                             ? new StaggeredTile.count(4, 4)
                             : new StaggeredTile.count(2, 1),
                         mainAxisSpacing: 4.0,
-                        crossAxisSpacing: 4.0,
+                        crossAxisSpacing: 1.0,
                       ),
                     ),
                   ],
                 ),
               ),
-            ));
+            ],
+          ),
+        ));
   }
 }
