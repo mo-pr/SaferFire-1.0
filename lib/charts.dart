@@ -2,10 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:flutter_circular_chart/flutter_circular_chart.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Zeiten Daten
@@ -170,18 +168,6 @@ class ChartsPageState extends State<ChartsPage> {
   var data = [48.0, 30.0, 61.0, 129.0, 246.0, 67.0];
   var data1 = [0.0,-2.0,3.5,-2.0,0.5,0.7,0.8,1.0,2.0,3.0,3.2];
 
-  List<CircularStackEntry> circularData = <CircularStackEntry>[
-    new CircularStackEntry(
-      <CircularSegmentEntry>[
-        new CircularSegmentEntry(25, Colors.blue, rankKey: 'technisch'),
-        new CircularSegmentEntry(25, Colors.red, rankKey: 'brand'),
-        new CircularSegmentEntry(25, Colors.green, rankKey: 'schadstoff'),
-        new CircularSegmentEntry(25, Colors.grey, rankKey: 'anderes'),
-      ],
-      rankKey: 'Quarterly Profits',
-    ),
-  ];
-
   Material myTextItems(String title, String subtitle){
     return Material(
       color: Colors.white,
@@ -252,15 +238,6 @@ class ChartsPageState extends State<ChartsPage> {
                     child:Text(subtitle,style:TextStyle(
                       fontSize: 30.0,
                     ),),
-                  ),
-
-                  Padding(
-                    padding:EdgeInsets.all(8.0),
-                    child:AnimatedCircularChart(
-                      size: const Size(100.0, 100.0),
-                      initialChartData: circularData,
-                      chartType: CircularChartType.Pie,
-                    ),
                   ),
 
                 ],

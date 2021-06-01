@@ -730,17 +730,18 @@ class _MainMenuState extends State<MainMenu> {
   int pageIndex = 0;
   int initialIndex = 0;
   final info _infoPage = info();
-  final ChartsPage _chartsPage = ChartsPage();
+  //final ChartsPage _chartsPage = ChartsPage();
   final camera _cam = camera();
   final Protocol _protocol = Protocol();
   final Oxygen _oxygen = Oxygen();
+  final ChartsPage _chart = ChartsPage();
 
   Widget _showPage = new ChartsPage();
 
   Widget _pageChooser(int page) {
     switch (page) {
       case 0:
-        return _chartsPage;
+        return _infoPage;
         break;
       case 1:
         return Container(
@@ -766,7 +767,7 @@ class _MainMenuState extends State<MainMenu> {
         return _cam;
         break;
       case 3:
-        return _protocol;
+        return _chart;
         break;
       case 4:
         return _oxygen;
