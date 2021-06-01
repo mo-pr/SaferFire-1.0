@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'adr.dart';
 import 'api.dart';
 import 'cam.dart';
+import 'charts.dart';
 import 'map.dart';
 import 'oxygenPage.dart';
 import 'protocol.dart';
@@ -23,7 +24,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-late Timer timer;
+Timer timer;
 enum LoginStatus { notSignIn, signIn }
 enum Title { Info, Karte, Foto, Protokoll, Atemschutz, Abschluss }
 
@@ -65,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
 
   checkPass() {
     final form = _keyV.currentState;
-    if (form!.validate()) {
+    if (form.validate()) {
       form.save();
       mailCheck();
     }
@@ -73,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
 
   check() {
     final form = _key.currentState;
-    if (form!.validate()) {
+    if (form.validate()) {
       form.save();
       login();
     }
@@ -81,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
 
   checkReg() {
     final form = _keyT.currentState;
-    if (form!.validate()) {
+    if (form.validate()) {
       form.save();
       save();
     }
@@ -105,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
     if (value == 1) {
       setState(() {
         final form = _keyV.currentState;
-        form!.reset();
+        form.reset();
       });
       print(message);
       loginToast(message);
@@ -190,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
         info();
         _pageState = 1;
         final form = _keyT.currentState;
-        form!.reset();
+        form.reset();
       });
       print(message);
       registerToast(message);
@@ -343,14 +344,14 @@ class _LoginPageState extends State<LoginPage> {
                               elevation: 6.0,
                               child: TextFormField(
                                 validator: (e) {
-                                  if (e!.isEmpty) {
+                                  if (e.isEmpty) {
                                     return "Please Insert Email";
                                   } else if (EmailValidator.validate(e) ==
                                       false) {
                                     return "E-Mail muss dem Format (abc@def.ghi) entsprechen";
                                   }
                                 },
-                                onSaved: (e) => email = e!,
+                                onSaved: (e) => email = e,
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,
@@ -429,13 +430,13 @@ class _LoginPageState extends State<LoginPage> {
                           elevation: 6.0,
                           child: TextFormField(
                             validator: (e) {
-                              if (e!.isEmpty) {
+                              if (e.isEmpty) {
                                 return "Please Insert Email";
                               } else if (EmailValidator.validate(e) == false) {
                                 return "E-Mail muss dem Format (abc@def.ghi) entsprechen";
                               }
                             },
-                            onSaved: (e) => email = e!,
+                            onSaved: (e) => email = e,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -457,12 +458,12 @@ class _LoginPageState extends State<LoginPage> {
                           elevation: 6.0,
                           child: TextFormField(
                             validator: (e) {
-                              if (e!.isEmpty) {
+                              if (e.isEmpty) {
                                 return "Password can't be Empty";
                               }
                             },
                             obscureText: _secureText,
-                            onSaved: (e) => password = e!,
+                            onSaved: (e) => password = e,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -560,13 +561,13 @@ class _LoginPageState extends State<LoginPage> {
                           elevation: 6.0,
                           child: TextFormField(
                             validator: (e) {
-                              if (e!.isEmpty) {
+                              if (e.isEmpty) {
                                 return "Feuerwehr darf nicht leer sein";
                               } else if (validateFeuerwehr(e) == false) {
                                 return "Feuerwehr muss dem Format (FF Xyz) entsprechen";
                               }
                             },
-                            onSaved: (e) => feuerwehr = e!,
+                            onSaved: (e) => feuerwehr = e,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -588,13 +589,13 @@ class _LoginPageState extends State<LoginPage> {
                           elevation: 6.0,
                           child: TextFormField(
                             validator: (e) {
-                              if (e!.isEmpty) {
+                              if (e.isEmpty) {
                                 return "Please insert Email";
                               } else if (EmailValidator.validate(e) == false) {
                                 return "E-Mail muss dem Format (abc@def.ghi) entsprechen";
                               }
                             },
-                            onSaved: (e) => email = e!,
+                            onSaved: (e) => email = e,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -613,7 +614,7 @@ class _LoginPageState extends State<LoginPage> {
                           elevation: 6.0,
                           child: TextFormField(
                             obscureText: _secureText,
-                            onSaved: (e) => password = e!,
+                            onSaved: (e) => password = e,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -691,16 +692,16 @@ class MainMenuState extends State<MainMenu> {
     });
   }
 
-  late Timer _timer;
+  Timer _timer;
   String email = "", id = "", ff = "";
-  late TabController tabController;
+  TabController tabController;
 
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      id = preferences.getString("id")!;
-      email = preferences.getString("email")!;
-      ff = preferences.getString('ff')!;
+      id = preferences.getString("id");
+      email = preferences.getString("email");
+      ff = preferences.getString('ff');
     });
     print("ID: " + id);
     print("USER: " + email);
@@ -727,6 +728,7 @@ class MainMenuState extends State<MainMenu> {
   final Oxygen _oxygen = Oxygen();
   final map _map = map();
   final adr _adr = adr();
+  final ChartsPage _chart = ChartsPage();
 
   bool isExpanded = false;
   double lat = 0, lng = 0;
@@ -745,7 +747,8 @@ class MainMenuState extends State<MainMenu> {
     camera(),
     Protocol(),
     Oxygen(),
-    adr()
+    adr(),
+    ChartsPage()
   ];
 
   List<String> pageNames = <String>[
@@ -1159,7 +1162,7 @@ class MainMenuState extends State<MainMenu> {
                     _index == 7?
                     Flexible(child: _oxygen):Container(),
                     _index == 8?
-                    Flexible(child: _oxygen):Container(),
+                    Flexible(child: _chart):Container(),
                   ],
                 ),
               ),

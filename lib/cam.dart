@@ -15,7 +15,7 @@ class _cameraState extends State<camera> {
   Future getImage() async {
     final image = await imagePicker.getImage(source: ImageSource.camera);
     setState(() {
-      images.add(File(image!.path));
+      images.add(File(image.path));
     });
   }
 

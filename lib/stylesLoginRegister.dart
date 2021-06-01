@@ -4,7 +4,7 @@ class InputWithIcon extends StatefulWidget {
   final IconData icon;
   final String hint;
 
-  InputWithIcon({required this.icon, required this.hint});
+  InputWithIcon({this.icon, this.hint});
 
   @override
   _InputWithIconState createState() => _InputWithIconState();
@@ -43,7 +43,7 @@ class _InputWithIconState extends State<InputWithIcon> {
 class OutlineBtn extends StatefulWidget {
   final String btnText;
 
-  OutlineBtn({required this.btnText});
+  OutlineBtn({this.btnText});
 
   @override
   _OutlineBtnState createState() => _OutlineBtnState();
@@ -70,7 +70,7 @@ class _OutlineBtnState extends State<OutlineBtn> {
 class PrimaryButton extends StatefulWidget {
   final String btnText;
 
-  PrimaryButton({required this.btnText});
+  PrimaryButton({this.btnText});
 
   @override
   _PrimaryButtonState createState() => _PrimaryButtonState();

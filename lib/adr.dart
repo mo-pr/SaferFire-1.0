@@ -57,9 +57,9 @@ class _adrState extends State<adr> {
         builder: (BuildContext context) {
           return new AlertDialog(
               title: new Text("UN-Nummer: " +
-                  adrs.asMap()[index]!.unnr.padLeft(4, '0') +
+                  adrs.asMap()[index].unnr.padLeft(4, '0') +
                   "\n\n" +
-                  adrs.asMap()[index]!.bez),
+                  adrs.asMap()[index].bez),
               actions: <Widget>[
                 new FlatButton(
                     child: new Text('Abbrechen'),

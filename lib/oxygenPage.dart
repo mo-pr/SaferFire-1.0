@@ -11,7 +11,7 @@ List<PDFEntry> persEntries = <PDFEntry>[];
 List<Entry> entries = <Entry>[];
 
 class _OxygenState extends State<Oxygen> {
-  late Timer _timer;
+  Timer _timer;
   TextEditingController _controller01 = new TextEditingController();
   TextEditingController _controller02 = new TextEditingController();
   TextEditingController _controller03 = new TextEditingController();
@@ -42,11 +42,11 @@ class _OxygenState extends State<Oxygen> {
   }
 
   void handleStartStop(int index) {
-    if (entries[index]._timer!.isRunning) {
-      entries[index]._timer!.stop();
+    if (entries[index]._timer.isRunning) {
+      entries[index]._timer.stop();
       persEntries[index]._stoptime = DateTime.now();
     } else {
-      entries[index]._timer!.start();
+      entries[index]._timer.start();
       entries[index]._time = DateFormat('kk:mm:ss').format(DateTime.now()).toString();
       persEntries[index]._starttime = DateTime.now();
     }
@@ -131,7 +131,7 @@ class _OxygenState extends State<Oxygen> {
                                   ),
                                   Text(
                                     formatTime(entries[index]
-                                        ._timer!
+                                        ._timer
                                         .elapsedMilliseconds),
                                     style: TextStyle(
                                       color: Colors.red,
@@ -395,16 +395,16 @@ class _OxygenState extends State<Oxygen> {
 }
 
 class Entry {
-  Stopwatch? _timer;
-  int? _entryNr;
-  String? _person01;
-  String? _person02;
-  String? _person03;
-  String? _time;
+  Stopwatch _timer;
+  int _entryNr;
+  String _person01;
+  String _person02;
+  String _person03;
+  String _time;
 
-  String? _pressure01;
-  String? _pressure02;
-  String? _pressure03;
+  String _pressure01;
+  String _pressure02;
+  String _pressure03;
 
   Entry(_person01, _person02, _person03, _number) {
     this._person01 = _person01;
@@ -414,22 +414,22 @@ class Entry {
   }
 
   String _getNames() {
-    String names = _person01! + " - " + _pressure01! + " bar\n";
+    String names = _person01 + " - " + _pressure01 + " bar\n";
     if (!(_person02 == null || _person02 == "")) {
-      names += _person02! + " - " + _pressure02! + " bar\n";
+      names += _person02 + " - " + _pressure02 + " bar\n";
     }
     if (!(_person03 == null || _person03 == "")) {
-      names += _person03! + " - " + _pressure03! + " bar\n";
+      names += _person03 + " - " + _pressure03 + " bar\n";
     }
 
     return names;
   }
 
-  String? _getTime() {
+  String _getTime() {
     return _time;
   }
 
-  int? get entryNr => _entryNr;
+  int get entryNr => _entryNr;
 
   @override
   String toString() {
@@ -438,16 +438,16 @@ class Entry {
 }
 
 class PDFEntry{
-  int? _people;
-  int? _entryNr;
-  String? _person01;
-  String? _person02;
-  String? _person03;
-  DateTime? _starttime;
-  DateTime? _stoptime;
-  String? _pressure01;
-  String? _pressure02;
-  String? _pressure03;
+  int _people;
+  int _entryNr;
+  String _person01;
+  String _person02;
+  String _person03;
+  DateTime _starttime;
+  DateTime _stoptime;
+  String _pressure01;
+  String _pressure02;
+  String _pressure03;
 
   PDFEntry(_person01, _person02, _person03, _number) {
     this._person01 = _person01;
@@ -462,13 +462,13 @@ class PDFEntry{
   String toString() {
     switch(_people){
       case 1:
-        return "Truppnr.: "+_entryNr.toString()+" von: "+_starttime!.toIso8601String()+" bis: "+_stoptime!.toIso8601String()+"\n("+_person01!+" "+_pressure01!+"bar)";
+        return "Truppnr.: "+_entryNr.toString()+" von: "+_starttime.toIso8601String()+" bis: "+_stoptime.toIso8601String()+"\n("+_person01+" "+_pressure01+"bar)";
         break;
       case 2:
-        return "Truppnr.: "+_entryNr.toString()+" von: "+_starttime!.toIso8601String()+" bis: "+_stoptime!.toIso8601String()+"\n("+_person01!+" "+_pressure01!+"bar) ""("+_person02!+" "+_pressure02!+"bar)";
+        return "Truppnr.: "+_entryNr.toString()+" von: "+_starttime.toIso8601String()+" bis: "+_stoptime.toIso8601String()+"\n("+_person01+" "+_pressure01+"bar) ""("+_person02+" "+_pressure02+"bar)";
         break;
       case 3:
-        return "Truppnr.: "+_entryNr.toString()+" von: "+_starttime!.toIso8601String()+" bis: "+_stoptime!.toIso8601String()+"\n("+_person01!+" "+_pressure01!+"bar) ""("+_person02!+" "+_pressure02!+"bar) ""("+_person03!+" "+_pressure03!+"bar)";
+        return "Truppnr.: "+_entryNr.toString()+" von: "+_starttime.toIso8601String()+" bis: "+_stoptime.toIso8601String()+"\n("+_person01+" "+_pressure01+"bar) ""("+_person02+" "+_pressure02+"bar) ""("+_person03+" "+_pressure03+"bar)";
         break;
     }
     return "";

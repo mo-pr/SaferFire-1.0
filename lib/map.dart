@@ -22,7 +22,7 @@ class _mapState extends State<map> {
 
   void loadMap() async {
     bool isAvailable = false;
-    isAvailable = (await MapLauncher.isMapAvailable(MapType.google))!;
+    isAvailable = (await MapLauncher.isMapAvailable(MapType.google));
     if (isAvailable) {
       await MapLauncher.showMarker(
         mapType: MapType.google,

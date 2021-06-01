@@ -22,7 +22,7 @@ double _lat = 0, _lng= 0;
 int alarmAmount = 0;
 
 class infoState extends State<info> {
-  late Timer _timer;
+  Timer _timer;
   Future<void> _readAPI() async {
     final res = await get(Uri.parse('https://intranet.ooelfv.at/webext2/rss/json_2tage.txt'));
     //final res = await get(Uri.parse('http://192.168.0.8/laufend.txt'));
@@ -50,11 +50,11 @@ class infoState extends State<info> {
     await _readAPI();
     _lat = 0.0;
     _lng = 0.0;
-    String? ff = preferences.getString("ff");
+    String ff = preferences.getString("ff");
     for (int i = 0; i < alarmAmount; i++) {
       if (alarmBody[i.toString()]
           .toString()
-          .contains(ff!)) {
+          .contains(ff)) {
         _lat = 0.0;
         _lng = 0.0;
         location = null;
@@ -124,7 +124,7 @@ class infoState extends State<info> {
     final page = doc.pages.add();
     final pageTwo = oxygen != "" ? doc.pages.add() : null;
     final pageThree = protocol != "" ? doc.pages.add() : null;
-    PdfLayoutResult? layoutResult = PdfTextElement(
+    PdfLayoutResult layoutResult = PdfTextElement(
             text: num +
                 subtype +
                 type +
@@ -142,10 +142,10 @@ class infoState extends State<info> {
             format: PdfLayoutFormat(layoutType: PdfLayoutType.paginate));
     page.graphics.drawLine(
         PdfPen(PdfColor(255, 0, 0)),
-        Offset(0, layoutResult!.bounds.bottom + 10),
+        Offset(0, layoutResult.bounds.bottom + 10),
         Offset(page.getClientSize().width, layoutResult.bounds.bottom + 10));
     if (oxygen != "") {
-      PdfLayoutResult? layoutResultTwo = PdfTextElement(
+      PdfLayoutResult layoutResultTwo = PdfTextElement(
               text: oxygen,
               font: PdfStandardFont(PdfFontFamily.helvetica, 12),
               brush: PdfSolidBrush(PdfColor(0, 0, 0)))
@@ -154,14 +154,14 @@ class infoState extends State<info> {
               bounds: Rect.fromLTWH(0, 0, page.getClientSize().width,
                   page.getClientSize().height),
               format: PdfLayoutFormat(layoutType: PdfLayoutType.paginate));
-      pageTwo!.graphics.drawLine(
+      pageTwo.graphics.drawLine(
           PdfPen(PdfColor(255, 0, 0)),
-          Offset(0, layoutResultTwo!.bounds.bottom + 10),
+          Offset(0, layoutResultTwo.bounds.bottom + 10),
           Offset(pageTwo.getClientSize().width,
               layoutResultTwo.bounds.bottom + 10));
     }
     if (protocol != "") {
-      PdfLayoutResult? layoutResultThree = PdfTextElement(
+      PdfLayoutResult layoutResultThree = PdfTextElement(
               text: protocol,
               font: PdfStandardFont(PdfFontFamily.helvetica, 12),
               brush: PdfSolidBrush(PdfColor(0, 0, 0)))
@@ -170,15 +170,15 @@ class infoState extends State<info> {
               bounds: Rect.fromLTWH(0, 0, page.getClientSize().width,
                   page.getClientSize().height),
               format: PdfLayoutFormat(layoutType: PdfLayoutType.paginate));
-      pageThree!.graphics.drawLine(
+      pageThree.graphics.drawLine(
           PdfPen(PdfColor(255, 0, 0)),
-          Offset(0, layoutResultThree!.bounds.bottom + 10),
+          Offset(0, layoutResultThree.bounds.bottom + 10),
           Offset(pageThree.getClientSize().width,
               layoutResultThree.bounds.bottom + 10));
     }
     List<int> bytes = doc.save();
     doc.dispose();
-    final path = (await getExternalStorageDirectory())!.path;
+    final path = (await getExternalStorageDirectory()).path;
     final file = File('$path/$name');
     await file.writeAsBytes(bytes, flush: true);
     OpenFile.open('$path/$name');
