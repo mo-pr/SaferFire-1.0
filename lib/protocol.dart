@@ -8,6 +8,8 @@ class Protocol extends StatefulWidget {
 }
 
 List<Entry> protocolEntries = <Entry>[];
+List<String> _locations = ['Wichtige Hinweise', 'Schadenslage', 'Tätigkeiten', 'D']; // Option 2
+String _selectedLocation; // Option 2
 
 class _ProtocolState extends State<Protocol> {
   TextEditingController _controller = new TextEditingController();
@@ -127,6 +129,22 @@ class _ProtocolState extends State<Protocol> {
               SizedBox(
                 height: 22,
               ),
+              DropdownButton(
+                hint: Text('Protokolart wählen'), // Not necessary for Option 1
+                value: _selectedLocation,
+                onChanged: (newValue) {
+                  setState(() {
+                    _selectedLocation = newValue;
+                  });
+                },
+                items: _locations.map((location) {
+                  return DropdownMenuItem(
+                    child: new Text(location),
+                    value: location,
+                  );
+                }).toList(),
+              ),
+
               Align(
                 alignment: Alignment.bottomCenter,
                 child: FlatButton(
@@ -135,7 +153,9 @@ class _ProtocolState extends State<Protocol> {
                         setState(() {
                           protocolEntries.add(new Entry(
                               DateTime.now(),
-                              _controller.text,protocolEntries.length+1));
+                              _controller.text,
+                              protocolEntries.length+1,
+                              _selectedLocation));
                           _controller.clear();
                         });
                       }
@@ -171,12 +191,15 @@ class Entry {
   String _text;
   DateTime _time;
   int _entrynr;
-  Entry(this._time, this._text, this._entrynr);
+  String _tag;
+
+  Entry(this._time, this._text, this._entrynr, this._tag);
 
   String getString() {
     return DateFormat('dd.MM.yyyy – kk:mm:ss')
         .format(_time)
-        .toString()+"\n\n$_text";
+        .toString()+"\n\n$_text"
+        .toString()+"\n$_tag";
   }
 
   @override

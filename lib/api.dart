@@ -92,7 +92,7 @@ class infoState extends State<info> {
 
         });
         if (status.toString().contains('abgeschlossen')) {
-          createPDF(num + ".pdf");
+          //createPDF(num + ".pdf");
           _lat = 0.0;
           _lng = 0.0;
           location = null;

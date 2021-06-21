@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,8 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:safer_fire_test/data.dart';
 
 // Zeiten Daten
 List<charts.Series<Task, String>> _timeSharing;
@@ -160,6 +163,10 @@ class ChartsPage extends StatefulWidget {
 }
 
 class ChartsPageState extends State<ChartsPage> {
+
+  Data data01 = new Data();
+
+  //Einsatzbericht test01 = berichte.first;
 
   ChartsPageState(){
     Data _data = new Data();
@@ -347,7 +354,7 @@ class ChartsPageState extends State<ChartsPage> {
                   ),
 
                   Padding(
-                    padding: EdgeInsets.all(1.0),
+                    padding: EdgeInsets.all(0.5),
                     child: new Sparkline(
                       data: data1,
                       fillMode: FillMode.below,
@@ -370,7 +377,7 @@ class ChartsPageState extends State<ChartsPage> {
 
 
 
-  Material deploymentsItem(String title, String subtitle){
+  Material deploymentsItem(String date, String time, String place){
     return Material(
       color: Colors.white,
       elevation: 14.0,
@@ -387,17 +394,25 @@ class ChartsPageState extends State<ChartsPage> {
                 children: <Widget>[
 
                   Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child:Text(title,style:TextStyle(
+                    padding: EdgeInsets.all(6.0),
+                    child:Text(date,style:TextStyle(
                       fontSize: 20.0,
                       color: Colors.blueAccent,
                     ),),
                   ),
 
                   Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child:Text(subtitle,style:TextStyle(
+                    padding: EdgeInsets.all(6.0),
+                    child:Text(time,style:TextStyle(
                       fontSize: 30.0,
+                    ),),
+                  ),
+
+                  Padding(
+                    padding: EdgeInsets.all(1.0),
+                    child:Text(place,style:TextStyle(
+                      fontSize: 18.0,
+                      color:Colors.grey,
                     ),),
                   ),
 
@@ -426,11 +441,11 @@ class ChartsPageState extends State<ChartsPage> {
               Padding(
                   padding: EdgeInsets.all(12),
                   child: Text('Einsätze',
-                      style: TextStyle(fontSize: 18))),
+                      style: TextStyle(fontSize: 18, color: Colors.black))),
               Padding(
                   padding: EdgeInsets.all(12),
                   child: Text('Daten',
-                      style: TextStyle(fontSize: 18))),
+                      style: TextStyle(fontSize: 18, color: Colors.black))),
             ],
           ),
           body: TabBarView(
@@ -446,59 +461,59 @@ class ChartsPageState extends State<ChartsPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => DeploymentsPage("Linz","FF-Gründberg","Autounfall","12:45")),
+                          MaterialPageRoute(builder: (context) => DeploymentsPage("011","Linz","FF-Gründberg","Autounfall","12:45")),
                         );
                       },
                       child: Container(
                         padding: const EdgeInsets.all(6),
-                        child: deploymentsItem("gestern","20 min"),
+                        child: deploymentsItem("gestern","20 min", "Zwettl"),
                       ),
                     ),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => DeploymentsPage("Zwettl an der Rodl","FF-Zwettl, FF-Badleonfleden","Brand","16:15")),
+                          MaterialPageRoute(builder: (context) => DeploymentsPage("012","Zwettl an der Rodl","FF-Zwettl, FF-Badleonfleden","Brand","16:15")),
                         );
                       },
                       child: Container(
                         padding: const EdgeInsets.all(6),
-                        child: deploymentsItem("vor 2 Tagen","48 min"),
+                        child: deploymentsItem("vor 2 Tagen","48 min", "Wels"),
                       ),
                     ),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => DeploymentsPage("Wels","FF-Traun","Sturz","8:20")),
+                          MaterialPageRoute(builder: (context) => DeploymentsPage("013","Wels","FF-Traun","Sturz","8:20")),
                         );
                       },
                       child: Container(
                         padding: const EdgeInsets.all(6),
-                        child: deploymentsItem("vor 3 Tagen","45 min"),
+                        child: deploymentsItem("vor 3 Tagen","45 min", "Traun"),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(6),
-                      child: deploymentsItem("vor 5 Tagen","112 min"),
+                      child: deploymentsItem("vor 5 Tagen","112 min", "Linz"),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(6),
-                      child: deploymentsItem("vor 8 Tagen", "34 min"),
+                      child: deploymentsItem("vor 8 Tagen", "34 min", "Traberg"),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(6),
-                      child: deploymentsItem("vor 12 Tagen", "219 min"),
+                      child: deploymentsItem("vor 12 Tagen", "219 min", "Graz"),
                     ),
 
                   ],
                   staggeredTiles: [
-                    StaggeredTile.extent(4, 120.0),
-                    StaggeredTile.extent(2, 120.0),
-                    StaggeredTile.extent(2, 120.0),
-                    StaggeredTile.extent(2, 120.0),
-                    StaggeredTile.extent(2, 120.0),
-                    StaggeredTile.extent(2, 120.0),
+                    StaggeredTile.extent(4, 140.0),
+                    StaggeredTile.extent(2, 140.0),
+                    StaggeredTile.extent(2, 140.0),
+                    StaggeredTile.extent(2, 140.0),
+                    StaggeredTile.extent(2, 140.0),
+                    StaggeredTile.extent(2, 140.0),
                   ],
                 ),
               ),
@@ -530,7 +545,7 @@ class ChartsPageState extends State<ChartsPage> {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(6),
-                        child: myCircularItems("Einsatz","25%-Brand"),
+                        child: myCircularItems("Einsatz","  25%\nBrand"),
                       ),
                     ),
                     GestureDetector(
@@ -547,11 +562,11 @@ class ChartsPageState extends State<ChartsPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(right:8.0),
-                      child: myTextItems("Users","25.5M"),
+                      child: myTextItems("Beteiligte","25M"),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: mychart2Items("Conversion","0.9M","+19% of target"),
+                      child: mychart2Items("Einsatzorte"," ","Oberösterreich"),
                     ),
 
                   ],
@@ -581,40 +596,146 @@ class DeploymentsPage extends StatelessWidget {
   String _type = null;
   String _stage = null;
   String _time = null;
+  String _id = null;
 
-  DeploymentsPage(String location, String feuerwehren, String type, String time){
+  DeploymentsPage(String id, String location, String feuerwehren, String type, String time){
     _location = location;
     _feuerwehren = feuerwehren;
     _type = type;
     _time = time;
+    _id = id;
   }
+
+  Container deploymentData(String title, String data){
+    return Container(
+      margin: const EdgeInsets.all(5),
+      padding: EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(6),
+            topRight: Radius.circular(6),
+            bottomLeft: Radius.circular(6),
+            bottomRight: Radius.circular(6)
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Text(title + ': ' + data, textAlign: TextAlign.left, style: TextStyle(fontSize: 20),),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red,
-        title: Text("Second Route"),
+        title: Text("Einsatz: " + _id),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            Center(
-              child:  Text('Einsatz', textAlign: TextAlign.center, style: TextStyle(fontSize: 36,),),
+      body: Container(
+        color: Colors.white,
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Container(
+                  child: Text('Einsatz', textAlign: TextAlign.center, style: TextStyle(fontSize: 36,),),
+                ),
+                Container(
+                  child: Text('Bilder:', style: TextStyle(fontSize: 20),),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ImageGallary()),
+                    );
+                  },
+                  child: Image.asset('assets/images/firewatch.png',width: 400,height: 200,fit: BoxFit.cover),
+                ),
+                SizedBox(  height: 10,),
+                Text('ID: ' + _id, style: TextStyle(fontSize: 30),),
+                Divider(
+                  height: 20,
+                  thickness: 4,
+                  color: Colors.grey,
+                ),
+                deploymentData('Ort', _location),
+                deploymentData('Feuerwehren', _feuerwehren),
+                deploymentData('Einsatzart', _type),
+                deploymentData('Zeit', _time),
+                deploymentData('Dauer', '1h 42min'),
+                SizedBox(  height: 20,),
+                OutlinedButton(
+                  onPressed: () {
+                    print('Protokoll wurde erstellt');
+                    },
+                  child: const Text('Protokoll erstellen', style: TextStyle(fontSize: 18,color: Colors.red,),),
+                ),
+                SizedBox(  height: 40,),
+              ],
             ),
-            Text('ID: 12345', style: TextStyle(fontSize: 20),),
-            Text('Location: ' + _location, style: TextStyle(fontSize: 20),),
-            Text('Feuerwehren: ' + _feuerwehren, style: TextStyle(fontSize: 20),),
-            Text('Einsatzart: ' + _type, style: TextStyle(fontSize: 20),),
-            Text('Zeit: ' + _time, style: TextStyle(fontSize: 20),),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
+class ImageGallary extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Gallary"),
+      ),
+      body: Container(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Container(
+                  child: Image.asset('assets/images/firewatch.png',width: 400,height: 200,fit: BoxFit.cover),
+                ),
+                SizedBox(  height: 15,),
+                Container(
+                  child: Image.asset('assets/images/firewatch.png',width: 400,height: 200,fit: BoxFit.cover),
+                ),
+                SizedBox(  height: 15,),
+                Container(
+                  child: Image.asset('assets/images/firewatch.png',width: 400,height: 200,fit: BoxFit.cover),
+                ),
+                SizedBox(  height: 15,),
+                Container(
+                  child: Image.asset('assets/images/firewatch.png',width: 400,height: 200,fit: BoxFit.cover),
+                ),
+                SizedBox(  height: 15,),
+                Container(
+                  child: Image.asset('assets/images/firewatch.png',width: 400,height: 200,fit: BoxFit.cover),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class StartPage extends StatefulWidget {
   @override
@@ -713,7 +834,7 @@ class _HomePageState extends State<StartPage> {
 
     _seriesLineData.add(
       charts.Series(
-        colorFn: (__, _) => charts.ColorUtil.fromDartColor(Color(0xff990099)),
+        colorFn: (__, _) => charts.ColorUtil.fromDartColor(Colors.blue),
         id: 'Air Pollution',
         data: linesalesdata,
         domainFn: (Sales sales, _) => sales.yearval,
@@ -771,8 +892,8 @@ class _HomePageState extends State<StartPage> {
                         Expanded(
                           child: charts.PieChart(
                               _timeSharing,
-                              animate: true,
-                              animationDuration: Duration(seconds: 1),
+                              animate: false,
+                              //animationDuration: Duration(seconds: 1),
                               behaviors: [
                                 new charts.DatumLegend(
                                   outsideJustification: charts.OutsideJustification.endDrawArea,
@@ -813,8 +934,8 @@ class _HomePageState extends State<StartPage> {
                               _seriesLineData,
                               defaultRenderer: new charts.LineRendererConfig(
                                   includeArea: false, stacked: true, includePoints: true),
-                              animate: true,
-                              animationDuration: Duration(seconds: 1),
+                              animate: false,
+                              //animationDuration: Duration(seconds: 1),
                               behaviors: [
                                 new charts.ChartTitle('Monat',
                                     behaviorPosition: charts.BehaviorPosition.bottom,
@@ -841,10 +962,10 @@ class _HomePageState extends State<StartPage> {
                         Expanded(
                           child: charts.BarChart(
                             _seriesData,
-                            animate: true,
+                            animate: false,
                             barGroupingType: charts.BarGroupingType.grouped,
                             //behaviors: [new charts.SeriesLegend()],
-                            animationDuration: Duration(seconds: 1),
+                            //animationDuration: Duration(seconds: 1),
                           ),
                         ),
                       ],
