@@ -265,7 +265,7 @@ class ChartsPageState extends State<ChartsPage> {
       shadowColor: Color(0x802196F3),
       child: Center(
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(2.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -296,7 +296,7 @@ class ChartsPageState extends State<ChartsPage> {
                   ),
 
                   Padding(
-                    padding: EdgeInsets.all(1.0),
+                    padding: EdgeInsets.all(0.1),
                     child: new Sparkline(
                       data: data,
                       lineColor: Color(0xffff6101),
@@ -397,7 +397,7 @@ class ChartsPageState extends State<ChartsPage> {
                     padding: EdgeInsets.all(6.0),
                     child:Text(date,style:TextStyle(
                       fontSize: 20.0,
-                      color: Colors.blueAccent,
+                      color: Colors.red,
                     ),),
                   ),
 
@@ -466,7 +466,7 @@ class ChartsPageState extends State<ChartsPage> {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(6),
-                        child: deploymentsItem("gestern","20 min", "Zwettl"),
+                        child: deploymentsItem("gestern","20 min", "Linz"),
                       ),
                     ),
                     GestureDetector(
@@ -478,7 +478,7 @@ class ChartsPageState extends State<ChartsPage> {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(6),
-                        child: deploymentsItem("vor 2 Tagen","48 min", "Wels"),
+                        child: deploymentsItem("vor 2 Tagen","48 min", "Zwettl"),
                       ),
                     ),
                     GestureDetector(
@@ -490,7 +490,7 @@ class ChartsPageState extends State<ChartsPage> {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(6),
-                        child: deploymentsItem("vor 3 Tagen","45 min", "Traun"),
+                        child: deploymentsItem("vor 3 Tagen","45 min", "Wels"),
                       ),
                     ),
                     Padding(
@@ -665,7 +665,7 @@ class DeploymentsPage extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => ImageGallary()),
                     );
                   },
-                  child: Image.asset('assets/images/firewatch.png',width: 400,height: 200,fit: BoxFit.cover),
+                  child: Image.asset('assets/images/fire.png',width: 400,height: 200,fit: BoxFit.cover),
                 ),
                 SizedBox(  height: 10,),
                 Text('ID: ' + _id, style: TextStyle(fontSize: 30),),
@@ -710,23 +710,23 @@ class ImageGallary extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Container(
-                  child: Image.asset('assets/images/firewatch.png',width: 400,height: 200,fit: BoxFit.cover),
+                  child: Image.asset('assets/images/fire.png',width: 400,height: 200,fit: BoxFit.cover),
                 ),
                 SizedBox(  height: 15,),
                 Container(
-                  child: Image.asset('assets/images/firewatch.png',width: 400,height: 200,fit: BoxFit.cover),
+                  child: Image.asset('assets/images/fire02.png',width: 400,height: 200,fit: BoxFit.cover),
                 ),
                 SizedBox(  height: 15,),
                 Container(
-                  child: Image.asset('assets/images/firewatch.png',width: 400,height: 200,fit: BoxFit.cover),
+                  child: Image.asset('assets/images/fire03.png',width: 400,height: 200,fit: BoxFit.cover),
                 ),
                 SizedBox(  height: 15,),
                 Container(
-                  child: Image.asset('assets/images/firewatch.png',width: 400,height: 200,fit: BoxFit.cover),
+                  child: Image.asset('assets/images/fire04.jpg',width: 400,height: 200,fit: BoxFit.cover),
                 ),
                 SizedBox(  height: 15,),
                 Container(
-                  child: Image.asset('assets/images/firewatch.png',width: 400,height: 200,fit: BoxFit.cover),
+                  child: Image.asset('assets/images/fire05.jpg',width: 400,height: 200,fit: BoxFit.cover),
                 ),
               ],
             ),
@@ -745,35 +745,9 @@ class StartPage extends StatefulWidget {
 
 
 class _HomePageState extends State<StartPage> {
-  List<charts.Series<Pollution, String>> _seriesData;
-  List<charts.Series<Task, String>> _seriesPieData;
   List<charts.Series<Sales, int>> _seriesLineData;
 
   _generateData() {
-    var data1 = [
-      new Pollution(1980, 'USA', 30),
-      new Pollution(1980, 'Asia', 40),
-      new Pollution(1980, 'Europe', 10),
-    ];
-    var data2 = [
-      new Pollution(1985, 'USA', 100),
-      new Pollution(1980, 'Asia', 150),
-      new Pollution(1985, 'Europe', 80),
-    ];
-    var data3 = [
-      new Pollution(1985, 'USA', 200),
-      new Pollution(1980, 'Asia', 300),
-      new Pollution(1985, 'Europe', 180),
-    ];
-
-    var piedata = [
-      new Task('Work', 35.8, Color(0xff3366cc)),
-      new Task('Eat', 8.3, Color(0xff990099)),
-      new Task('Commute', 10.8, Color(0xff109618)),
-      new Task('TV', 15.6, Color(0xfffdbe19)),
-      new Task('Sleep', 19.2, Color(0xffff9900)),
-      new Task('Other', 10.3, Color(0xffdc3912)),
-    ];
 
     var linesalesdata = [
       new Sales(0, 48),
@@ -783,54 +757,6 @@ class _HomePageState extends State<StartPage> {
       new Sales(4, 246),
       new Sales(5, 67),
     ];
-
-    _seriesData.add(
-      charts.Series(
-        domainFn: (Pollution pollution, _) => pollution.place,
-        measureFn: (Pollution pollution, _) => pollution.quantity,
-        id: '2017',
-        data: data1,
-        fillPatternFn: (_, __) => charts.FillPatternType.solid,
-        fillColorFn: (Pollution pollution, _) =>
-            charts.ColorUtil.fromDartColor(Color(0xff990099)),
-      ),
-    );
-
-    _seriesData.add(
-      charts.Series(
-        domainFn: (Pollution pollution, _) => pollution.place,
-        measureFn: (Pollution pollution, _) => pollution.quantity,
-        id: '2018',
-        data: data2,
-        fillPatternFn: (_, __) => charts.FillPatternType.solid,
-        fillColorFn: (Pollution pollution, _) =>
-            charts.ColorUtil.fromDartColor(Color(0xff109618)),
-      ),
-    );
-
-    _seriesData.add(
-      charts.Series(
-        domainFn: (Pollution pollution, _) => pollution.place,
-        measureFn: (Pollution pollution, _) => pollution.quantity,
-        id: '2019',
-        data: data3,
-        fillPatternFn: (_, __) => charts.FillPatternType.solid,
-        fillColorFn: (Pollution pollution, _) =>
-            charts.ColorUtil.fromDartColor(Color(0xffff9900)),
-      ),
-    );
-
-    _seriesPieData.add(
-      charts.Series(
-        domainFn: (Task task, _) => task.task,
-        measureFn: (Task task, _) => task.taskvalue,
-        colorFn: (Task task, _) =>
-            charts.ColorUtil.fromDartColor(task.colorval),
-        id: 'Air Pollution',
-        data: piedata,
-        labelAccessorFn: (Task row, _) => '${row.taskvalue}',
-      ),
-    );
 
     _seriesLineData.add(
       charts.Series(
@@ -847,8 +773,6 @@ class _HomePageState extends State<StartPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _seriesData = List<charts.Series<Pollution, String>>();
-    _seriesPieData = List<charts.Series<Task, String>>();
     _seriesLineData = List<charts.Series<Sales, int>>();
     _generateData();
   }
@@ -857,7 +781,7 @@ class _HomePageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.red,
@@ -867,7 +791,6 @@ class _HomePageState extends State<StartPage> {
               tabs: [
                 Tab(icon: Icon(FontAwesomeIcons.chartPie)),
                 Tab(icon: Icon(FontAwesomeIcons.chartLine)),
-                Tab(icon: Icon(FontAwesomeIcons.solidChartBar),),
               ],
             ),
             title: Text('Dauer'),
@@ -944,28 +867,6 @@ class _HomePageState extends State<StartPage> {
                                     behaviorPosition: charts.BehaviorPosition.start,
                                     titleOutsideJustification: charts.OutsideJustification.middleDrawArea)
                               ]
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Container(
-                  child: Center(
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          'Gesamteinsatzdauer der letzten Monate',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
-                        Expanded(
-                          child: charts.BarChart(
-                            _seriesData,
-                            animate: false,
-                            barGroupingType: charts.BarGroupingType.grouped,
-                            //behaviors: [new charts.SeriesLegend()],
-                            //animationDuration: Duration(seconds: 1),
                           ),
                         ),
                       ],
@@ -1057,8 +958,8 @@ class AccidentTypeState extends State<AccidentType> {
                         Expanded(
                           child: charts.PieChart(
                               _accidentType,
-                              animate: true,
-                              animationDuration: Duration(seconds: 1),
+                              animate: false,
+                              //animationDuration: Duration(seconds: 1),
                               behaviors: [
                                 new charts.DatumLegend(
                                   outsideJustification: charts.OutsideJustification.endDrawArea,
@@ -1093,10 +994,10 @@ class AccidentTypeState extends State<AccidentType> {
                         Expanded(
                           child: charts.BarChart(
                             _accidentLevel,
-                            animate: true,
+                            animate: false,
                             barGroupingType: charts.BarGroupingType.grouped,
                             //behaviors: [new charts.SeriesLegend()],
-                            animationDuration: Duration(seconds: 1),
+                            //animationDuration: Duration(seconds: 1),
                           ),
                         ),
                       ],

@@ -52,6 +52,7 @@ class infoState extends State<info> {
     _lng = 0.0;
     String ff = preferences.getString("ff");
     for (int i = 0; i < alarmAmount; i++) {
+      /*
       if (alarmBody[i.toString()]
           .toString()
           .contains(ff)) {
@@ -105,7 +106,7 @@ class infoState extends State<info> {
           num = null;
           status = null;
         }
-      }
+      }*/
     }
   }
 
@@ -181,7 +182,7 @@ class infoState extends State<info> {
     final path = (await getExternalStorageDirectory()).path;
     final file = File('$path/$name');
     await file.writeAsBytes(bytes, flush: true);
-    OpenFile.open('$path/$name');
+    //OpenFile.open('$path/$name');
   }
 
   set lat(double value) {
