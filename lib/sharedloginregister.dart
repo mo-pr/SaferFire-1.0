@@ -89,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   mailCheck() async {
-    /*final response = await http.post(
+   /*final response = await http.post(
         Uri.parse("http://192.168.0.8/api_verification.php"),
         body: {"flag": 3.toString(), "email": email});*/
     final response = await http

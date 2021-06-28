@@ -1,23 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:async';
 
 class Oxygen extends StatefulWidget {
   @override
   _OxygenState createState() => _OxygenState();
 }
+
 List<PDFEntry> persEntries = <PDFEntry>[];
 List<Entry> entries = <Entry>[];
 
 class _OxygenState extends State<Oxygen> {
+  final _key = new GlobalKey<FormState>(), _keyT = new GlobalKey<FormState>();
+  String p01, p02, p03, n01, n02, n03;
   Timer _timer;
-  TextEditingController _controller01 = new TextEditingController();
-  TextEditingController _controller02 = new TextEditingController();
-  TextEditingController _controller03 = new TextEditingController();
-  TextEditingController _pressure01 = new TextEditingController();
-  TextEditingController _pressure02 = new TextEditingController();
-  TextEditingController _pressure03 = new TextEditingController();
 
   String formatTime(int milliseconds) {
     var secs = milliseconds ~/ 1000;
@@ -47,10 +45,17 @@ class _OxygenState extends State<Oxygen> {
       persEntries[index]._stoptime = DateTime.now();
     } else {
       entries[index]._timer.start();
-      entries[index]._time = DateFormat('kk:mm:ss').format(DateTime.now()).toString();
+      entries[index]._time =
+          DateFormat('kk:mm:ss').format(DateTime.now()).toString();
       persEntries[index]._starttime = DateTime.now();
     }
     setState(() {});
+  }
+
+  void resetTime(int index){
+    if (!entries[index]._timer.isRunning) {
+      entries[index]._timer.reset();
+    }
   }
 
   void _promptRemoveTodoItem(int index) {
@@ -58,7 +63,9 @@ class _OxygenState extends State<Oxygen> {
         context: context,
         builder: (BuildContext context) {
           return new AlertDialog(
-              title: new Text("Trupp " + (index + 1).toString() + ": Wählen Sie eine Aktion"),
+              title: new Text("Trupp " +
+                  (index + 1).toString() +
+                  ": Wählen Sie eine Aktion"),
               actions: <Widget>[
                 new FlatButton(
                     child: new Text('Start'),
@@ -70,6 +77,12 @@ class _OxygenState extends State<Oxygen> {
                     child: new Text('Stop'),
                     onPressed: () {
                       handleStartStop(index);
+                      Navigator.of(context).pop();
+                    }),
+                new FlatButton(
+                    child: new Text('Reset'),
+                    onPressed: () {
+                      resetTime(index);
                       Navigator.of(context).pop();
                     })
               ]);
@@ -149,12 +162,6 @@ class _OxygenState extends State<Oxygen> {
         backgroundColor: Colors.red,
         child: Icon(Icons.add),
         onPressed: () {
-          _controller01.clear();
-          _controller02.clear();
-          _controller03.clear();
-          _pressure01.clear();
-          _pressure02.clear();
-          _pressure03.clear();
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -191,60 +198,98 @@ class _OxygenState extends State<Oxygen> {
                 BoxShadow(
                     color: Colors.black, offset: Offset(0, 10), blurRadius: 10),
               ]),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                "Neuer Trupp",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              TextField(
-                decoration: InputDecoration(hintText: "Person 1"),
-                controller: _controller01,
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              TextField(
-                decoration: InputDecoration(hintText: "Person 2"),
-                controller: _controller02,
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              TextField(
-                decoration: InputDecoration(hintText: "Person 3"),
-                controller: _controller03,
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: FlatButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Dialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(Constants.padding),
-                            ),
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            child: pressureBox(context),
+          child: Form(
+            key: _keyT,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  "Neuer Trupp",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                ),
+                TextFormField(
+                  validator: (e) {
+                    if (e.isEmpty) {
+                      return "Person 01 darf nicht leer sein";
+                    }
+                  },
+                  onSaved: (e) => n01 = e,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w300,
+                  ),
+                  decoration: InputDecoration(
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 20, right: 15),
+                      ),
+                      contentPadding: EdgeInsets.all(18),
+                      labelText: "Person 01"),
+                ),
+                TextFormField(
+                  validator: (e) {
+                    if (e.isEmpty) {
+                      return "Person 02 darf nicht leer sein";
+                    }
+                  },
+                  onSaved: (e) => n02 = e,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w300,
+                  ),
+                  decoration: InputDecoration(
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 20, right: 15),
+                      ),
+                      contentPadding: EdgeInsets.all(18),
+                      labelText: "Person 02"),
+                ),
+                TextFormField(
+                  onSaved: (e) => n03 = e,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w300,
+                  ),
+                  decoration: InputDecoration(
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 20, right: 15),
+                      ),
+                      contentPadding: EdgeInsets.all(18),
+                      labelText: "Person 03"),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: FlatButton(
+                      onPressed: () {
+                        final form = _keyT.currentState;
+                        if (form.validate()) {
+                          form.save();
+                          Navigator.of(context).pop();
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(Constants.padding),
+                                ),
+                                elevation: 0,
+                                backgroundColor: Colors.transparent,
+                                child: pressureBox(context),
+                              );
+                            },
                           );
-                        },
-                      );
-                    },
-                    child: Text(
-                      "Speichern",
-                      style: TextStyle(fontSize: 18),
-                    )),
-              ),
-            ],
+                        }
+                      },
+                      child: Text(
+                        "Speichern",
+                        style: TextStyle(fontSize: 18),
+                      )),
+                ),
+              ],
+            ),
           ),
         ),
         Positioned(
@@ -282,98 +327,125 @@ class _OxygenState extends State<Oxygen> {
                 BoxShadow(
                     color: Colors.black, offset: Offset(0, 10), blurRadius: 10),
               ]),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                "Sauerstoff",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              TextField(
-                decoration: InputDecoration(hintText: "Druck Person 1 "),
-                controller: _pressure01,
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              (_controller02.text != "")
-                  ? TextField(
-                      decoration: InputDecoration(hintText: "Druck Person 2"),
-                      controller: _pressure02,
-                    )
-                  : Container(),
-              SizedBox(
-                height: 4,
-              ),
-              (_controller03.text != "")
-                  ? TextField(
-                      decoration: InputDecoration(hintText: "Druck Person 3"),
-                      controller: _pressure03,
-                    )
-                  : Container(),
-              SizedBox(
-                height: 4,
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: FlatButton(
-                    onPressed: () {
-                      if (_controller01.text != "") {
-                        setState(() {
-                          DateTime now = new DateTime.now();
-                          entries.add(new Entry(
-                              _controller01.text,
-                              _controller02.text,
-                              _controller03.text,
-                              entries.length + 1));
-                          persEntries.add(new PDFEntry(
-                              _controller01.text,
-                              _controller02.text,
-                              _controller03.text,
-                              entries.length));
-                          entries[entries.length - 1]._pressure01 =
-                              _pressure01.text;
-                          persEntries[entries.length - 1]._pressure01 =
-                              _pressure01.text;
-                          persEntries[entries.length-1]._people= 1;
-                          if (_controller02.text != "") {
-                            entries[entries.length - 1]._pressure02 =
-                                _pressure02.text;
+          child: Form(
+            key: _key,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  "Sauerstoff",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                ),
+                TextFormField(
+                  validator: (e) {
+                    if (e.isEmpty) {
+                      return "Druck von Person 01 darf nicht leer sein";
+                    }
+                  },
+                  onSaved: (e) => p01 = e,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w300,
+                  ),
+                  decoration: InputDecoration(
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 20, right: 15),
+                      ),
+                      contentPadding: EdgeInsets.all(18),
+                      labelText: "Druck 01"),
+                ),
+                TextFormField(
+                  validator: (e) {
+                    if (e.isEmpty) {
+                      return "Druck von Person 02 darf nicht leer sein";
+                    }
+                  },
+                  onSaved: (e) => p02 = e,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w300,
+                  ),
+                  decoration: InputDecoration(
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(left: 20, right: 15),
+                      ),
+                      contentPadding: EdgeInsets.all(18),
+                      labelText: "Druck 02"),
+                ),
+                (n03 != "")
+                    ? TextFormField(
+                        validator: (e) {
+                          if (e.isEmpty) {
+                            return "Druck von Person 03 darf nicht leer sein";
                           }
-                          if (_controller02.text != "") {
-                            persEntries[entries.length - 1]._pressure02 =
-                                _pressure02.text;
-                            persEntries[entries.length-1]._people= 2;
+                        },
+                        onSaved: (e) => p03 = e,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                        ),
+                        decoration: InputDecoration(
+                            prefixIcon: Padding(
+                              padding: EdgeInsets.only(left: 20, right: 15),
+                            ),
+                            contentPadding: EdgeInsets.all(18),
+                            labelText: "Druck 03"),
+                      )
+                    : Container(),
+                SizedBox(
+                  height: 4,
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: FlatButton(
+                      onPressed: () {
+                        final form = _key.currentState;
+                        if (form.validate()) {
+                          form.save();
+                          if (n01 != "") {
+                            setState(() {
+                              DateTime now = new DateTime.now();
+                              entries.add(new Entry(
+                                  n01,
+                                  n02,
+                                  n03,
+                                  entries.length + 1));
+                              persEntries.add(new PDFEntry(
+                                  n01,
+                                  n02,
+                                  n03,
+                                  entries.length));
+
+                              entries[entries.length - 1]._pressure01 = p01;
+                              persEntries[entries.length - 1]._pressure01 = p01;
+                              persEntries[entries.length - 1]._people = 1;
+                              entries[entries.length - 1]._pressure02 = p02;
+                              persEntries[entries.length - 1]._pressure02 = p02;
+                              persEntries[entries.length - 1]._people = 2;
+                              if (n03 != "") {
+                                entries[entries.length - 1]._pressure03 = p03;
+                              }
+                              if (n03 != "") {
+                                persEntries[entries.length - 1]._pressure03 =
+                                    p03;
+                                persEntries[entries.length - 1]._people = 3;
+                              }
+                              entries[entries.length - 1]._timer = Stopwatch();
+                            });
+                            Navigator.of(context).pop();
                           }
-                          if (_controller03.text != "") {
-                            entries[entries.length - 1]._pressure03 =
-                                _pressure03.text;
-                          }
-                          if (_controller03.text != "") {
-                            persEntries[entries.length - 1]._pressure03 =
-                                _pressure03.text;
-                            persEntries[entries.length-1]._people= 3;
-                          }
-                          _controller01.clear();
-                          _controller02.clear();
-                          _controller03.clear();
-                          _pressure01.clear();
-                          _pressure02.clear();
-                          _pressure03.clear();
-                          entries[entries.length - 1]._timer = Stopwatch();
-                        });
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: Text(
-                      "Speichern",
-                      style: TextStyle(fontSize: 18),
-                    )),
-              ),
-            ],
+                        }
+                      },
+                      child: Text(
+                        "Speichern",
+                        style: TextStyle(fontSize: 18),
+                      )),
+                ),
+              ],
+            ),
           ),
         ),
         Positioned(
@@ -437,7 +509,7 @@ class Entry {
   }
 }
 
-class PDFEntry{
+class PDFEntry {
   int _people;
   int _entryNr;
   String _person01;
@@ -460,15 +532,57 @@ class PDFEntry{
 
   @override
   String toString() {
-    switch(_people){
+    switch (_people) {
       case 1:
-        return "Truppnr.: "+_entryNr.toString()+" von: "+_starttime.toIso8601String()+" bis: "+_stoptime.toIso8601String()+"\n("+_person01+" "+_pressure01+"bar)";
+        return "Truppnr.: " +
+            _entryNr.toString() +
+            " von: " +
+            _starttime.toIso8601String() +
+            " bis: " +
+            _stoptime.toIso8601String() +
+            "\n(" +
+            _person01 +
+            " " +
+            _pressure01 +
+            "bar)";
         break;
       case 2:
-        return "Truppnr.: "+_entryNr.toString()+" von: "+_starttime.toIso8601String()+" bis: "+_stoptime.toIso8601String()+"\n("+_person01+" "+_pressure01+"bar) ""("+_person02+" "+_pressure02+"bar)";
+        return "Truppnr.: " +
+            _entryNr.toString() +
+            " von: " +
+            _starttime.toIso8601String() +
+            " bis: " +
+            _stoptime.toIso8601String() +
+            "\n(" +
+            _person01 +
+            " " +
+            _pressure01 +
+            "bar) " "(" +
+            _person02 +
+            " " +
+            _pressure02 +
+            "bar)";
         break;
       case 3:
-        return "Truppnr.: "+_entryNr.toString()+" von: "+_starttime.toIso8601String()+" bis: "+_stoptime.toIso8601String()+"\n("+_person01+" "+_pressure01+"bar) ""("+_person02+" "+_pressure02+"bar) ""("+_person03+" "+_pressure03+"bar)";
+        return "Truppnr.: " +
+            _entryNr.toString() +
+            " von: " +
+            _starttime.toIso8601String() +
+            " bis: " +
+            _stoptime.toIso8601String() +
+            "\n(" +
+            _person01 +
+            " " +
+            _pressure01 +
+            "bar) " "(" +
+            _person02 +
+            " " +
+            _pressure02 +
+            "bar) " "(" +
+            _person03 +
+            " " +
+            _pressure03 +
+            "bar)";
         break;
     }
     return "";

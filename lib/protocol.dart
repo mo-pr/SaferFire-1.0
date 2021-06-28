@@ -8,8 +8,6 @@ class Protocol extends StatefulWidget {
 }
 
 List<Entry> protocolEntries = <Entry>[];
-List<String> _locations = ['Wichtige Hinweise', 'Schadenslage', 'Tätigkeiten', 'D']; // Option 2
-String _selectedLocation; // Option 2
 
 class _ProtocolState extends State<Protocol> {
   TextEditingController _controller = new TextEditingController();
@@ -21,56 +19,57 @@ class _ProtocolState extends State<Protocol> {
       body: Center(
         child: protocolEntries.isEmpty == true
             ? Container(
-                child: Text(
-                  "Keine Einträge vorhanden",
-                  style: TextStyle(color: Colors.black87, fontSize: 28),
-                ),
-              )
+          child: Text(
+            "Keine Einträge vorhanden",
+            style: TextStyle(color: Colors.black87, fontSize: 28),
+          ),
+        )
             : ListView.builder(
-                padding: const EdgeInsets.all(8),
-                scrollDirection: Axis.vertical,
-                itemCount: protocolEntries.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10)),
-                        boxShadow: [
-                          BoxShadow(
-                            color:
-                            Colors.grey.withOpacity(0.3),
-                            spreadRadius: 2,
-                            blurRadius: 2,
-                            offset: Offset(0,
-                                3), // changes position of shadow
-                          ),
-                        ],
+            padding: const EdgeInsets.all(8),
+            scrollDirection: Axis.vertical,
+            itemCount: protocolEntries.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                margin: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                        color:
+                        Colors.grey.withOpacity(0.3),
+                        spreadRadius: 2,
+                        blurRadius: 2,
+                        offset: Offset(0,
+                            3),
                       ),
-                      child: Card(
-                        color: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            radius: Constants.padding,
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(Constants.avatarRadius)),
-                                child: Image.asset(
-                                    "assets/images/logo_small_icon_only.png")),
-                          ),
-                          title: Text(
-                            protocolEntries[index].getString(),
-                            style:
-                                TextStyle(fontSize: 19.0, color: Colors.black87),
-                          ),
-                        ),
-                      ));
-                }),
+                    ],
+                  ),
+                  child: Card(
+                    color: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        radius: Constants.padding,
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(Constants.avatarRadius)),
+                            child: Image.asset(
+                                "assets/images/logo_small_icon_only.png")),
+                      ),
+                      title: Text(
+                        protocolEntries[index].getString(),
+                        style:
+                        TextStyle(fontSize: 15.0, color: Colors.black87),
+                      ),
+                    ),
+                  ));
+            }),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.red,
@@ -129,22 +128,6 @@ class _ProtocolState extends State<Protocol> {
               SizedBox(
                 height: 22,
               ),
-              DropdownButton(
-                hint: Text('Protokolart wählen'), // Not necessary for Option 1
-                value: _selectedLocation,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedLocation = newValue;
-                  });
-                },
-                items: _locations.map((location) {
-                  return DropdownMenuItem(
-                    child: new Text(location),
-                    value: location,
-                  );
-                }).toList(),
-              ),
-
               Align(
                 alignment: Alignment.bottomCenter,
                 child: FlatButton(
@@ -153,9 +136,7 @@ class _ProtocolState extends State<Protocol> {
                         setState(() {
                           protocolEntries.add(new Entry(
                               DateTime.now(),
-                              _controller.text,
-                              protocolEntries.length+1,
-                              _selectedLocation));
+                              _controller.text,protocolEntries.length+1));
                           _controller.clear();
                         });
                       }
@@ -177,7 +158,7 @@ class _ProtocolState extends State<Protocol> {
             radius: Constants.avatarRadius,
             child: ClipRRect(
                 borderRadius:
-                    BorderRadius.all(Radius.circular(Constants.avatarRadius)),
+                BorderRadius.all(Radius.circular(Constants.avatarRadius)),
                 child: Image.asset(
                     "assets/images/logo_small_icon_only_inverted.png")),
           ),
@@ -191,15 +172,12 @@ class Entry {
   String _text;
   DateTime _time;
   int _entrynr;
-  String _tag;
-
-  Entry(this._time, this._text, this._entrynr, this._tag);
+  Entry(this._time, this._text, this._entrynr);
 
   String getString() {
     return DateFormat('dd.MM.yyyy – kk:mm:ss')
         .format(_time)
-        .toString()+"\n\n$_text"
-        .toString()+"\n$_tag";
+        .toString()+"\n\n$_text";
   }
 
   @override

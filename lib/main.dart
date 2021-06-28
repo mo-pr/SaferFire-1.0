@@ -6,6 +6,7 @@ import 'sharedloginregister.dart';
 
 void main() {
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     home: LoginPage(),
   ));
 }

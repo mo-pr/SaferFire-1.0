@@ -23,13 +23,6 @@ class _cameraState extends State<camera> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      /*appBar: AppBar(
-        title: Text(
-          "Kamera",
-          style: TextStyle(fontSize: 20),
-        ),
-        backgroundColor: Color(0xffb32b19),
-      ),*/
       body: Center(
         child: images.isEmpty == true
             ? Container(
@@ -42,7 +35,6 @@ class _cameraState extends State<camera> {
                 padding: const EdgeInsets.all(8),
                 scrollDirection: Axis.vertical,
                 itemCount: images.length,
-                //gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount:2),
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                     color: Colors.transparent,
