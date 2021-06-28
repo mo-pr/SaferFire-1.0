@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
-
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +14,7 @@ import 'api.dart';
 import 'cam.dart';
 import 'charts.dart';
 import 'map.dart';
+import 'notImplemeneted.dart';
 import 'oxygenPage.dart';
 import 'protocol.dart';
 import 'stylesLoginRegister.dart';
@@ -729,6 +729,7 @@ class MainMenuState extends State<MainMenu> {
   final map _map = map();
   final adr _adr = adr();
   final ChartsPage _chart = ChartsPage();
+  final noImpl _nimpl = noImpl();
 
   bool isExpanded = false;
   double lat = 0, lng = 0;
@@ -747,7 +748,9 @@ class MainMenuState extends State<MainMenu> {
     camera(),
     Protocol(),
     Oxygen(),
+    noImpl(),
     adr(),
+    noImpl(),
     ChartsPage()
   ];
 
@@ -1156,11 +1159,11 @@ class MainMenuState extends State<MainMenu> {
                     _index == 4?
                     Flexible(child: _oxygen):Container(),
                     _index == 5?
-                    Flexible(child: _oxygen):Container(),
+                    Flexible(child: _nimpl):Container(),
                     _index == 6?
                     Flexible(child: _adr):Container(),
                     _index == 7?
-                    Flexible(child: _oxygen):Container(),
+                    Flexible(child: _nimpl):Container(),
                     _index == 8?
                     Flexible(child: _chart):Container(),
                   ],

@@ -20,20 +20,20 @@ class _adrState extends State<adr> {
   }
 
   Future getData() async {
-    final conn = await MySqlConnection.connect(new ConnectionSettings(
+    /*final conn = await MySqlConnection.connect(new ConnectionSettings(
       host: '192.168.0.8',
       port: 3306,
       user: 'MP_DEV',
       password: 'MP_DEV',
       db: 'saferfire',
-    ));
-    /*final conn = await MySqlConnection.connect(new ConnectionSettings(
+    ));*/
+    final conn = await MySqlConnection.connect(new ConnectionSettings(
       host: '86.56.241.47',
       port: 3306,
       user: 'MP_DEV',
       password: 'MP_DEV',
       db: 'saferfire',
-    ));*/
+    ));
     var result = await conn.query('select * from unnumbers');
     for (var row in result) {
       adrs.add(new ADRobj(
@@ -100,7 +100,8 @@ class _adrState extends State<adr> {
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: TextField(
-              style: TextStyle(color: Colors.white),
+              keyboardType: TextInputType.number,
+              style: TextStyle(color: Colors.black87),
               onChanged: (value) {
                 setState(() {
                   filterSeach(value);
