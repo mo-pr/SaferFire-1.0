@@ -89,11 +89,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   mailCheck() async {
-   /*final response = await http.post(
-        Uri.parse("http://192.168.0.8/api_verification.php"),
-        body: {"flag": 3.toString(), "email": email});*/
     final response = await http
-        .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
+        .post(Uri.parse("http://IP/api_verification.php"), body: {
       "flag": 3.toString(),
       "email": email
     });
@@ -117,11 +114,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   login() async {
-    /*final response = await http.post(
-        Uri.parse("http://192.168.0.8/api_verification.php"),
-        body: {"flag": 1.toString(), "email": email, "password": password});*/
     final response = await http
-        .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
+        .post(Uri.parse("http://IP/api_verification.php"), body: {
       "flag": 1.toString(),
       "email": email,
       "password": password
@@ -169,15 +163,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   save() async {
-    /*final response = await http
-        .post(Uri.parse("http://192.168.0.8/api_verification.php"), body: {
-      "flag": 2.toString(),
-      "email": email,
-      "feuerwehr": feuerwehr,
-      "password": password
-    });*/
     final response = await http
-        .post(Uri.parse("http://86.56.241.47/api_verification.php"), body: {
+        .post(Uri.parse("http://IP/api_verification.php"), body: {
       "flag": 2.toString(),
       "email": email,
       "feuerwehr": feuerwehr,
